@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useMemo } from 'react';
+import { useCallback, useRef, useState, useMemo, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -16,6 +16,7 @@ import type { RouteProp } from '@react-navigation/native';
 import { quranData } from '../data/quran';
 import type { Ayah, Surah } from '../types/quran';
 import type { RootStackParamList } from '../types/navigation';
+import { useLastViewedAyat } from '../hooks/useLastViewedAyat';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 0;
@@ -36,6 +37,9 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
   const { surahNumber, startAyah = 1 } = route.params;
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { saveLastViewed } = useLastViewedAyat();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentAyahRef = useRef({ surahNumber, ayahNumber: startAyah });
 
   const surah = useMemo(() => 
     quranData.surahs.find(s => s.number === surahNumber),
@@ -51,11 +55,35 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
     return Math.max(0, startAyah - 1);
   }, [startAyah]);
 
+  // Save position on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+      // Save current position when leaving
+      saveLastViewed(currentAyahRef.current.surahNumber, currentAyahRef.current.ayahNumber);
+    };
+  }, [saveLastViewed]);
+
   const handleViewableItemsChanged = useCallback(({ viewableItems }: { viewableItems: Array<{ index: number | null }> }) => {
     if (viewableItems.length > 0 && viewableItems[0].index !== null) {
-      setCurrentIndex(viewableItems[0].index);
+      const newIndex = viewableItems[0].index;
+      setCurrentIndex(newIndex);
+
+      // Track current ayah for unmount save
+      const ayahNumber = newIndex + 1;
+      currentAyahRef.current = { surahNumber, ayahNumber };
+
+      // Debounced save to storage
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+      debounceRef.current = setTimeout(() => {
+        saveLastViewed(surahNumber, ayahNumber);
+      }, 500);
     }
-  }, []);
+  }, [surahNumber, saveLastViewed]);
 
   const viewabilityConfig = useMemo(() => ({
     itemVisiblePercentThreshold: 50,
