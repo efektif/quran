@@ -19,18 +19,20 @@ interface Props {
 }
 
 export default function SurahListScreen({ navigation }: Props) {
-  const { getLastViewed } = useLastViewedAyat();
+  const { getLastViewed, isLoaded } = useLastViewedAyat();
   const [lastViewed, setLastViewed] = useState<LastViewedAyat | null>(null);
 
-  // Refresh last viewed position when screen gains focus
+  // Refresh last viewed position when screen gains focus or storage loads
   useEffect(() => {
+    if (!isLoaded) return;
+
     const unsubscribe = navigation.addListener('focus', () => {
       setLastViewed(getLastViewed());
     });
     // Also load on initial mount
     setLastViewed(getLastViewed());
     return unsubscribe;
-  }, [navigation, getLastViewed]);
+  }, [navigation, getLastViewed, isLoaded]);
 
   const lastViewedSurah = useMemo(() => {
     if (!lastViewed) return null;

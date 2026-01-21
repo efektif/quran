@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { storage } from '../utils/storage';
+import { useCallback, useEffect, useState } from 'react';
+import { storage, preloadStorage } from '../utils/storage';
 
 const STORAGE_KEY = 'lastViewedAyat';
 
@@ -10,6 +10,13 @@ export interface LastViewedAyat {
 }
 
 export function useLastViewedAyat() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Preload storage on mount
+  useEffect(() => {
+    preloadStorage(STORAGE_KEY).then(() => setIsLoaded(true));
+  }, []);
+
   const getLastViewed = useCallback((): LastViewedAyat | null => {
     try {
       const value = storage.getString(STORAGE_KEY);
@@ -29,13 +36,9 @@ export function useLastViewedAyat() {
     storage.set(STORAGE_KEY, JSON.stringify(data));
   }, []);
 
-  const clearLastViewed = useCallback((): void => {
-    storage.remove(STORAGE_KEY);
-  }, []);
-
   return {
     getLastViewed,
     saveLastViewed,
-    clearLastViewed,
+    isLoaded,
   };
 }

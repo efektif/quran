@@ -1,55 +1,82 @@
 import { Platform } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 interface StorageInterface {
-  getString(key: string): string | undefined;
+  getString(key: string): string | null;
   set(key: string, value: string): void;
-  remove(key: string): void;
-  contains(key: string): boolean;
 }
 
 // Web localStorage wrapper
 class WebStorage implements StorageInterface {
-  getString(key: string): string | undefined {
-    if (typeof window === 'undefined') return undefined;
-    const value = window.localStorage.getItem(key);
-    return value ?? undefined;
+  getString(key: string): string | null {
+    if (typeof window === 'undefined') return null;
+    return window.localStorage.getItem(key);
   }
 
   set(key: string, value: string): void {
     if (typeof window === 'undefined') return;
     window.localStorage.setItem(key, value);
   }
+}
 
-  remove(key: string): void {
-    if (typeof window === 'undefined') return;
-    window.localStorage.removeItem(key);
+// Native SecureStore wrapper (synchronous-like via caching)
+class NativeStorage implements StorageInterface {
+  private cache = new Map<string, string>();
+  private initialized = false;
+
+  getString(key: string): string | null {
+    // Return from cache if available
+    if (this.cache.has(key)) {
+      return this.cache.get(key) ?? null;
+    }
+    // Async load happens in background, return null for first call
+    if (!this.initialized) {
+      this.loadFromStore(key);
+    }
+    return null;
   }
 
-  contains(key: string): boolean {
-    if (typeof window === 'undefined') return false;
-    return window.localStorage.getItem(key) !== null;
+  set(key: string, value: string): void {
+    this.cache.set(key, value);
+    SecureStore.setItemAsync(key, value).catch(console.error);
+  }
+
+  private async loadFromStore(key: string): Promise<void> {
+    try {
+      const value = await SecureStore.getItemAsync(key);
+      if (value !== null) {
+        this.cache.set(key, value);
+      }
+      this.initialized = true;
+    } catch (error) {
+      console.error('Failed to load from SecureStore:', error);
+    }
+  }
+
+  // Pre-load a key (call this early in app lifecycle)
+  async preload(key: string): Promise<string | null> {
+    try {
+      const value = await SecureStore.getItemAsync(key);
+      if (value !== null) {
+        this.cache.set(key, value);
+      }
+      this.initialized = true;
+      return value;
+    } catch (error) {
+      console.error('Failed to preload from SecureStore:', error);
+      return null;
+    }
   }
 }
 
-// Lazy-load native storage to avoid web bundling issues
-let nativeStorage: StorageInterface | null = null;
-const getNativeStorage = (): StorageInterface => {
-  if (nativeStorage) {
-    return nativeStorage;
-  }
-  // Dynamic require to prevent web from bundling this
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { createMMKV } = require('react-native-mmkv');
-  nativeStorage = createMMKV() as StorageInterface;
-  return nativeStorage;
-};
+// Platform-aware storage
+const nativeStorage = new NativeStorage();
 
-// Platform-aware storage factory
-const createStorage = (): StorageInterface => {
-  if (Platform.OS === 'web') {
-    return new WebStorage();
-  }
-  return getNativeStorage();
-};
+export const storage: StorageInterface = Platform.OS === 'web'
+  ? new WebStorage()
+  : nativeStorage;
 
-export const storage: StorageInterface = createStorage();
+// Export preload for native
+export const preloadStorage = Platform.OS === 'web'
+  ? async (_key: string) => null
+  : (key: string) => nativeStorage.preload(key);
