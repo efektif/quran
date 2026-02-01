@@ -24,7 +24,15 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single",
+      "name": "Efektif Quran",
+      "shortName": "Quran",
+      "description": "A beautiful Quran reader app with full-screen verse display",
+      "lang": "en",
+      "themeColor": "#0a1628",
+      "backgroundColor": "#0a1628"
     },
     "plugins": [
       "expo-secure-store"
