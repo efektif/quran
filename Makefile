@@ -26,24 +26,24 @@ dev:
 
 # Preview the production build locally using Wrangler
 preview: build
-	npx wrangler pages dev dist
+	bunx wrangler pages dev dist
 
 # Deploy to Cloudflare Pages
 deploy: build
-	npx wrangler pages deploy dist --project-name=efektif-quran
+	bunx wrangler pages deploy dist --project-name=efektif-quran
 	@echo "Deployed to Cloudflare Pages!"
 
 # Deploy without rebuilding (use existing dist)
 deploy-only:
-	npx wrangler pages deploy dist --project-name=efektif-quran
+	bunx wrangler pages deploy dist --project-name=efektif-quran
 
 # First-time setup: create Cloudflare Pages project
 cf-init:
-	npx wrangler pages project create efektif-quran --production-branch=main
+	bunx wrangler pages project create efektif-quran --production-branch=main
 
 # Login to Cloudflare
 cf-login:
-	npx wrangler login
+	bunx wrangler login
 
 # Show help
 help:
