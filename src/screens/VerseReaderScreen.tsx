@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   StatusBar,
   Platform,
+  Linking,
 } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
@@ -131,6 +132,15 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
             <Text style={styles.metaDivider}>•</Text>
             <Text style={styles.metaText}>Halaman {ayah.page}</Text>
           </View>
+
+          {/* Tafseer link */}
+          <TouchableOpacity
+            style={styles.tafseerButton}
+            onPress={() => Linking.openURL(`https://quran.com/${currentSurah.number}/${ayah.numberInSurah}`)}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.tafseerButtonText}>Baca Tafseer →</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -319,6 +329,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#5a7a9a',
     marginHorizontal: 8,
+  },
+  tafseerButton: {
+    marginTop: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#d4af37',
+  },
+  tafseerButtonText: {
+    fontSize: 13,
+    color: '#d4af37',
+    fontWeight: '600',
   },
   swipeHint: {
     position: 'absolute',
