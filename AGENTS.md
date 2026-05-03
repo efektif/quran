@@ -143,9 +143,19 @@ try {
 ## Agent Instructions
 
 ### Tooling
+- Use **Bun only**. Do not use `npm`, `yarn`, `pnpm`, or `npx`.
 - Use `bunx` instead of `npx`
 - Use `bun expo add/remove` for Expo packages
 - Use `ast-grep` instead of `grep` for code search
+
+### Versioning & Changelog
+- Keep `package.json` version as the app version.
+- Record release-facing changes in `CHANGELOG.md`.
+- Use SemVer:
+  - `patch`: fixes, docs, and internal refactors.
+  - `minor`: compatible app features or UI additions.
+  - `major`: breaking data, navigation, config, or API changes.
+- If a change has no release effect, state `No version impact` in the PR.
 
 ### Git Commits
 - Concise messages, no signatures or Co-Authored-By
