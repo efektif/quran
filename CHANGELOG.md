@@ -14,6 +14,7 @@ This project follows Semantic Versioning for app-level releases.
 ### Changed
 
 - Moved Quran list and reader surfaces onto Efektif native primitives while preserving React Navigation behavior.
+- Centralized Quran theme setup through the Efektif native provider contract, with a compatibility fallback for the published native package.
 
 ## [1.0.0] - 2026-05-03
 

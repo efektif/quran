@@ -11,19 +11,17 @@ import {
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 import { Button, Card, Screen, Text } from '@efektif/native';
-import { nativeTokens } from '@efektif/tokens';
 
 import { quranData } from '../data/quran';
 import type { Ayah, Surah } from '../types/quran';
 import type { RootStackParamList } from '../types/navigation';
 import { useLastViewedAyat } from '../hooks/useLastViewedAyat';
+import { quranColors, quranTint } from '../theme/efektifNative';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 0;
 const NAVBAR_HEIGHT = Platform.OS === 'ios' ? 34 : 0;
 const CONTENT_HEIGHT = SCREEN_HEIGHT - STATUSBAR_HEIGHT - NAVBAR_HEIGHT;
-const colors = nativeTokens.darkColors;
-const tint = nativeTokens.tints.teal;
 
 interface Props {
   navigation: NativeStackNavigationProp<RootStackParamList, 'VerseReader'>;
@@ -170,7 +168,7 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
 
   return (
     <Screen style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+      <StatusBar barStyle="light-content" backgroundColor={quranColors.background} />
       
       {/* Back button overlay */}
       <View style={styles.headerOverlay}>
@@ -222,7 +220,7 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: quranColors.background,
   },
   headerOverlay: {
     position: 'absolute',
@@ -240,26 +238,26 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
+    backgroundColor: quranColors.surface,
+    borderColor: quranColors.border,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 0,
   },
   backButtonText: {
     fontSize: 24,
-    color: colors.foreground,
+    color: quranColors.foreground,
   },
   progressContainer: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
+    backgroundColor: quranColors.surface,
+    borderColor: quranColors.border,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
   },
   progressText: {
     fontSize: 14,
-    color: tint,
+    color: quranTint,
     fontWeight: '600',
   },
   ayahContainer: {
@@ -274,13 +272,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: colors.card,
-    borderColor: colors.border,
+    backgroundColor: quranColors.card,
+    borderColor: quranColors.border,
     paddingVertical: 80,
   },
   surahBadge: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
+    backgroundColor: quranColors.surface,
+    borderColor: quranColors.border,
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 20,
@@ -288,7 +286,7 @@ const styles = StyleSheet.create({
   },
   surahBadgeText: {
     fontSize: 14,
-    color: colors.mutedForeground,
+    color: quranColors.mutedForeground,
     fontWeight: '500',
   },
   arabicContainer: {
@@ -300,7 +298,7 @@ const styles = StyleSheet.create({
   arabicText: {
     fontSize: 36,
     lineHeight: 72,
-    color: colors.foreground,
+    color: quranColors.foreground,
     textAlign: 'center',
     fontWeight: '400',
     writingDirection: 'rtl',
@@ -314,19 +312,19 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: tint,
+    borderColor: quranTint,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
   },
   verseNumberText: {
     fontSize: 18,
-    color: tint,
+    color: quranTint,
     fontWeight: 'bold',
   },
   verseMeta: {
     fontSize: 14,
-    color: colors.mutedForeground,
+    color: quranColors.mutedForeground,
   },
   metaInfo: {
     flexDirection: 'row',
@@ -335,11 +333,11 @@ const styles = StyleSheet.create({
   },
   metaText: {
     fontSize: 12,
-    color: colors.mutedForeground,
+    color: quranColors.mutedForeground,
   },
   metaDivider: {
     fontSize: 12,
-    color: colors.mutedForeground,
+    color: quranColors.mutedForeground,
     marginHorizontal: 8,
   },
   tafseerButton: {
@@ -348,11 +346,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: tint,
+    borderColor: quranTint,
   },
   tafseerButtonText: {
     fontSize: 13,
-    color: tint,
+    color: quranTint,
     fontWeight: '600',
   },
   swipeHint: {
@@ -364,11 +362,11 @@ const styles = StyleSheet.create({
   },
   swipeHintText: {
     fontSize: 12,
-    color: colors.mutedForeground,
+    color: quranColors.mutedForeground,
   },
   errorText: {
     fontSize: 18,
-    color: colors.foreground,
+    color: quranColors.foreground,
     textAlign: 'center',
     marginTop: 100,
   },

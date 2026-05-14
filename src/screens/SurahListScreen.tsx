@@ -2,15 +2,12 @@ import { useCallback, useState, useMemo, useEffect } from 'react';
 import { StyleSheet, View, FlatList, Pressable } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Card, ListItem, Screen, Stack, Text } from '@efektif/native';
-import { nativeTokens } from '@efektif/tokens';
 
 import { quranData } from '../data/quran';
 import type { Surah } from '../types/quran';
 import type { RootStackParamList } from '../types/navigation';
 import { useLastViewedAyat, type LastViewedAyat } from '../hooks/useLastViewedAyat';
-
-const colors = nativeTokens.darkColors;
-const tint = nativeTokens.tints.teal;
+import { quranColors, quranTint } from '../theme/efektifNative';
 
 interface Props {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SurahList'>;
@@ -123,22 +120,22 @@ export default function SurahListScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: quranColors.background,
   },
   header: {
     paddingHorizontal: 20,
     paddingVertical: 24,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: quranColors.border,
   },
   headerTitle: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: tint,
+    color: quranTint,
   },
   headerSubtitle: {
     fontSize: 14,
-    color: colors.mutedForeground,
+    color: quranColors.mutedForeground,
   },
   listContent: {
     paddingHorizontal: 16,
@@ -147,8 +144,8 @@ const styles = StyleSheet.create({
   surahItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.card,
-    borderColor: colors.border,
+    backgroundColor: quranColors.card,
+    borderColor: quranColors.border,
     borderRadius: 8,
     padding: 16,
     marginTop: 12,
@@ -157,7 +154,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 6,
-    backgroundColor: colors.surfaceMuted,
+    backgroundColor: quranColors.surfaceMuted,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
@@ -165,7 +162,7 @@ const styles = StyleSheet.create({
   surahNumberText: {
     fontSize: 14,
     fontWeight: '600',
-    color: tint,
+    color: quranTint,
   },
   surahInfo: {
     flex: 1,
@@ -173,43 +170,43 @@ const styles = StyleSheet.create({
   surahEnglishName: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.foreground,
+    color: quranColors.foreground,
   },
   surahTranslation: {
     fontSize: 12,
-    color: colors.mutedForeground,
+    color: quranColors.mutedForeground,
   },
   surahMeta: {
     fontSize: 11,
-    color: colors.mutedForeground,
+    color: quranColors.mutedForeground,
   },
   surahArabicName: {
     fontSize: 18,
-    color: tint,
+    color: quranTint,
     fontWeight: '500',
   },
   resumeCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surface,
+    backgroundColor: quranColors.surface,
     borderRadius: 8,
     padding: 16,
     marginTop: 12,
     borderWidth: 1,
-    borderColor: tint,
+    borderColor: quranTint,
   },
   resumeIcon: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: tint,
+    backgroundColor: quranTint,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
   },
   resumeIconText: {
     fontSize: 16,
-    color: colors.background,
+    color: quranColors.background,
   },
   resumeInfo: {
     flex: 1,
@@ -217,15 +214,15 @@ const styles = StyleSheet.create({
   resumeTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: tint,
+    color: quranTint,
   },
   resumeSubtitle: {
     fontSize: 13,
-    color: colors.mutedForeground,
+    color: quranColors.mutedForeground,
   },
   resumeArabic: {
     fontSize: 18,
-    color: colors.foreground,
+    color: quranColors.foreground,
     fontWeight: '500',
   },
 });
