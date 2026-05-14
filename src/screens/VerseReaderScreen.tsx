@@ -2,17 +2,16 @@ import { useCallback, useRef, useState, useMemo, useEffect } from 'react';
 import {
   StyleSheet,
   View,
-  Text,
   Dimensions,
   FlatList,
-  TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   Platform,
   Linking,
 } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
+import { Button, Card, Screen, Text } from '@efektif/native';
+import { nativeTokens } from '@efektif/tokens';
 
 import { quranData } from '../data/quran';
 import type { Ayah, Surah } from '../types/quran';
@@ -23,6 +22,8 @@ const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 0;
 const NAVBAR_HEIGHT = Platform.OS === 'ios' ? 34 : 0;
 const CONTENT_HEIGHT = SCREEN_HEIGHT - STATUSBAR_HEIGHT - NAVBAR_HEIGHT;
+const colors = nativeTokens.darkColors;
+const tint = nativeTokens.tints.teal;
 
 interface Props {
   navigation: NativeStackNavigationProp<RootStackParamList, 'VerseReader'>;
@@ -99,13 +100,13 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
     
     return (
       <View style={styles.ayahContainer}>
-        <View style={styles.ayahContent}>
+        <Card style={styles.ayahContent}>
           {/* Surah info at top */}
-          <View style={styles.surahBadge}>
-            <Text style={styles.surahBadgeText}>
+          <Card style={styles.surahBadge}>
+            <Text variant="subtitle" style={styles.surahBadgeText}>
               {currentSurah.englishName}
             </Text>
-          </View>
+          </Card>
 
           {/* Arabic verse - centered */}
           <View style={styles.arabicContainer}>
@@ -134,14 +135,16 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
           </View>
 
           {/* Tafseer link */}
-          <TouchableOpacity
+          <Button
+            variant="outline"
+            size="sm"
             style={styles.tafseerButton}
+            textStyle={styles.tafseerButtonText}
             onPress={() => Linking.openURL(`https://quran.com/${currentSurah.number}/${ayah.numberInSurah}`)}
-            activeOpacity={0.7}
           >
-            <Text style={styles.tafseerButtonText}>Baca Tafseer →</Text>
-          </TouchableOpacity>
-        </View>
+            Baca Tafseer →
+          </Button>
+        </Card>
       </View>
     );
   }, []);
@@ -159,31 +162,34 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
 
   if (!surah) {
     return (
-      <SafeAreaView style={styles.container}>
+      <Screen style={styles.container}>
         <Text style={styles.errorText}>Surah tidak ditemukan</Text>
-      </SafeAreaView>
+      </Screen>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0a1628" />
+    <Screen style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
       
       {/* Back button overlay */}
-      <SafeAreaView style={styles.headerOverlay}>
-        <TouchableOpacity 
+      <View style={styles.headerOverlay}>
+        <Button
+          variant="secondary"
+          size="sm"
           style={styles.backButton} 
+          textStyle={styles.backButtonText}
           onPress={handleBack}
-          activeOpacity={0.7}
+          accessibilityLabel="Kembali ke daftar surah"
         >
-          <Text style={styles.backButtonText}>←</Text>
-        </TouchableOpacity>
-        <View style={styles.progressContainer}>
+          ←
+        </Button>
+        <Card style={styles.progressContainer}>
           <Text style={styles.progressText}>
             {currentIndex + 1} / {verses.length}
           </Text>
-        </View>
-      </SafeAreaView>
+        </Card>
+      </View>
 
       {/* TikTok-style vertical scroll */}
       <FlatList
@@ -206,17 +212,17 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
       />
 
       {/* Swipe hint */}
-      <View style={styles.swipeHint}>
+      <View style={styles.swipeHint} pointerEvents="none">
         <Text style={styles.swipeHintText}>↑ Swipe untuk ayat selanjutnya</Text>
       </View>
-    </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a1628',
+    backgroundColor: colors.background,
   },
   headerOverlay: {
     position: 'absolute',
@@ -234,23 +240,26 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(19, 39, 67, 0.9)',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 0,
   },
   backButtonText: {
     fontSize: 24,
-    color: '#ffffff',
+    color: colors.foreground,
   },
   progressContainer: {
-    backgroundColor: 'rgba(19, 39, 67, 0.9)',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
   },
   progressText: {
     fontSize: 14,
-    color: '#d4af37',
+    color: tint,
     fontWeight: '600',
   },
   ayahContainer: {
@@ -265,10 +274,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    backgroundColor: colors.card,
+    borderColor: colors.border,
     paddingVertical: 80,
   },
   surahBadge: {
-    backgroundColor: '#1e3a5f',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 20,
@@ -276,7 +288,7 @@ const styles = StyleSheet.create({
   },
   surahBadgeText: {
     fontSize: 14,
-    color: '#8ca3c4',
+    color: colors.mutedForeground,
     fontWeight: '500',
   },
   arabicContainer: {
@@ -288,7 +300,7 @@ const styles = StyleSheet.create({
   arabicText: {
     fontSize: 36,
     lineHeight: 72,
-    color: '#ffffff',
+    color: colors.foreground,
     textAlign: 'center',
     fontWeight: '400',
     writingDirection: 'rtl',
@@ -302,19 +314,19 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: '#d4af37',
+    borderColor: tint,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
   },
   verseNumberText: {
     fontSize: 18,
-    color: '#d4af37',
+    color: tint,
     fontWeight: 'bold',
   },
   verseMeta: {
     fontSize: 14,
-    color: '#5a7a9a',
+    color: colors.mutedForeground,
   },
   metaInfo: {
     flexDirection: 'row',
@@ -323,11 +335,11 @@ const styles = StyleSheet.create({
   },
   metaText: {
     fontSize: 12,
-    color: '#5a7a9a',
+    color: colors.mutedForeground,
   },
   metaDivider: {
     fontSize: 12,
-    color: '#5a7a9a',
+    color: colors.mutedForeground,
     marginHorizontal: 8,
   },
   tafseerButton: {
@@ -336,11 +348,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#d4af37',
+    borderColor: tint,
   },
   tafseerButtonText: {
     fontSize: 13,
-    color: '#d4af37',
+    color: tint,
     fontWeight: '600',
   },
   swipeHint: {
@@ -352,11 +364,11 @@ const styles = StyleSheet.create({
   },
   swipeHintText: {
     fontSize: 12,
-    color: '#5a7a9a',
+    color: colors.mutedForeground,
   },
   errorText: {
     fontSize: 18,
-    color: '#ffffff',
+    color: colors.foreground,
     textAlign: 'center',
     marginTop: 100,
   },
