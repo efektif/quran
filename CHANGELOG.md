@@ -10,6 +10,7 @@ This project follows Semantic Versioning for app-level releases.
 
 - Release policy for Bun-only package management, SemVer, and changelog entries.
 - Added published `@efektif/native` and `@efektif/tokens` packages for the shared Efektif native design contract.
+- Added an About link on the Surah list that opens Moriz Kay at `https://x.com/morizkay`.
 
 ### Changed
 

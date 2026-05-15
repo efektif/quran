@@ -1,5 +1,5 @@
 import { useCallback, useState, useMemo, useEffect } from 'react';
-import { StyleSheet, View, FlatList, Pressable } from 'react-native';
+import { StyleSheet, View, FlatList, Pressable, Linking } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Card, ListItem, Screen, Stack, Text } from '@efektif/native';
 
@@ -8,6 +8,8 @@ import type { Surah } from '../types/quran';
 import type { RootStackParamList } from '../types/navigation';
 import { useLastViewedAyat, type LastViewedAyat } from '../hooks/useLastViewedAyat';
 import { quranColors, quranTint } from '../theme/efektifNative';
+
+const ABOUT_URL = 'https://x.com/morizkay';
 
 interface Props {
   navigation: NativeStackNavigationProp<RootStackParamList, 'SurahList'>;
@@ -49,6 +51,10 @@ export default function SurahListScreen({ navigation }: Props) {
       });
     }
   }, [navigation, lastViewed]);
+
+  const handleAboutPress = useCallback(() => {
+    void Linking.openURL(ABOUT_URL);
+  }, []);
 
   const renderSurahItem = useCallback(({ item }: { item: Surah }) => (
     <Pressable
@@ -102,7 +108,17 @@ export default function SurahListScreen({ navigation }: Props) {
   return (
     <Screen style={styles.container}>
       <Stack gap={4} style={styles.header}>
-        <Text variant="title" style={styles.headerTitle}>Al-Quran</Text>
+        <View style={styles.headerTopRow}>
+          <Text variant="title" style={styles.headerTitle}>Al-Quran</Text>
+          <Pressable
+            onPress={handleAboutPress}
+            accessibilityRole="link"
+            accessibilityLabel="Buka profil Moriz Kay"
+            style={styles.aboutButton}
+          >
+            <Text style={styles.aboutButtonText}>About</Text>
+          </Pressable>
+        </View>
         <Text variant="subtitle" style={styles.headerSubtitle}>Pilih Surah untuk dibaca</Text>
       </Stack>
       <FlatList
@@ -132,6 +148,25 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     color: quranTint,
+  },
+  headerTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  aboutButton: {
+    borderWidth: 1,
+    borderColor: quranColors.border,
+    borderRadius: 999,
+    backgroundColor: quranColors.surface,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  },
+  aboutButtonText: {
+    color: quranTint,
+    fontSize: 12,
+    fontWeight: '700',
   },
   headerSubtitle: {
     fontSize: 14,
