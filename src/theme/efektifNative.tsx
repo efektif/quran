@@ -27,13 +27,13 @@ const nativeApi = EfektifNative as EfektifNativeCompatApi;
 
 export const quranNativeTheme =
   nativeApi.createNativeTheme?.({
-    density: 'comfortable',
-    mode: 'dark',
-    tint: 'teal',
+    density: 'dense',
+    mode: 'light',
+    tint: 'default',
   }) ?? (EfektifNative.darkTheme as QuranNativeTheme);
 
 export const quranColors = quranNativeTheme.colors;
-export const quranTint = quranNativeTheme.colors.tint ?? quranNativeTheme.tints.teal;
+export const quranTint = quranNativeTheme.colors.tint;
 
 export function QuranThemeProvider({ children }: { children: ReactNode }) {
   const Provider = nativeApi.EfektifNativeProvider;
@@ -43,7 +43,7 @@ export function QuranThemeProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <Provider density="comfortable" mode="dark" tint="teal">
+    <Provider density="dense" mode="light" tint="default">
       {children}
     </Provider>
   );

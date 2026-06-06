@@ -128,7 +128,7 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
           {/* Juz and Page info */}
           <View style={styles.metaInfo}>
             <Text style={styles.metaText}>Juz {ayah.juz}</Text>
-            <Text style={styles.metaDivider}>•</Text>
+            <Text style={styles.metaDivider}>/</Text>
             <Text style={styles.metaText}>Halaman {ayah.page}</Text>
           </View>
 
@@ -140,7 +140,7 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
             textStyle={styles.tafseerButtonText}
             onPress={() => Linking.openURL(`https://quran.com/${currentSurah.number}/${ayah.numberInSurah}`)}
           >
-            Baca Tafseer →
+            Baca Tafseer
           </Button>
         </Card>
       </View>
@@ -168,7 +168,7 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
 
   return (
     <Screen style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={quranColors.background} />
+      <StatusBar barStyle="dark-content" backgroundColor={quranColors.background} />
       
       {/* Back button overlay */}
       <View style={styles.headerOverlay}>
@@ -180,7 +180,7 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
           onPress={handleBack}
           accessibilityLabel="Kembali ke daftar surah"
         >
-          ←
+          Back
         </Button>
         <Card style={styles.progressContainer}>
           <Text style={styles.progressText}>
@@ -211,7 +211,7 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
 
       {/* Swipe hint */}
       <View style={styles.swipeHint} pointerEvents="none">
-        <Text style={styles.swipeHintText}>↑ Swipe untuk ayat selanjutnya</Text>
+        <Text style={styles.swipeHintText}>Swipe untuk ayat selanjutnya</Text>
       </View>
     </Screen>
   );
@@ -235,9 +235,9 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 50 : 16,
   },
   backButton: {
-    width: 44,
+    minWidth: 72,
     height: 44,
-    borderRadius: 22,
+    borderRadius: 8,
     backgroundColor: quranColors.surface,
     borderColor: quranColors.border,
     justifyContent: 'center',
@@ -245,27 +245,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   backButtonText: {
-    fontSize: 24,
+    fontSize: 13,
     color: quranColors.foreground,
+    fontWeight: '700',
   },
   progressContainer: {
     backgroundColor: quranColors.surface,
     borderColor: quranColors.border,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 8,
   },
   progressText: {
     fontSize: 14,
     color: quranTint,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   ayahContainer: {
     height: CONTENT_HEIGHT,
     width: SCREEN_WIDTH,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
   },
   ayahContent: {
     flex: 1,
@@ -274,20 +275,22 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: quranColors.card,
     borderColor: quranColors.border,
-    paddingVertical: 80,
+    borderRadius: 12,
+    paddingHorizontal: 24,
+    paddingVertical: 72,
   },
   surahBadge: {
     backgroundColor: quranColors.surface,
     borderColor: quranColors.border,
     paddingHorizontal: 20,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 8,
     marginBottom: 40,
   },
   surahBadgeText: {
     fontSize: 14,
     color: quranColors.mutedForeground,
-    fontWeight: '500',
+    fontWeight: '700',
   },
   arabicContainer: {
     flex: 1,
@@ -308,18 +311,17 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   verseNumberBadge: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: quranTint,
+    width: 44,
+    height: 44,
+    borderRadius: 8,
+    backgroundColor: quranTint,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
   },
   verseNumberText: {
-    fontSize: 18,
-    color: quranTint,
+    fontSize: 16,
+    color: quranColors.background,
     fontWeight: 'bold',
   },
   verseMeta: {
@@ -344,14 +346,14 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingHorizontal: 24,
     paddingVertical: 10,
-    borderRadius: 20,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: quranTint,
+    borderColor: quranColors.border,
   },
   tafseerButtonText: {
     fontSize: 13,
-    color: quranTint,
-    fontWeight: '600',
+    color: quranColors.foreground,
+    fontWeight: '700',
   },
   swipeHint: {
     position: 'absolute',

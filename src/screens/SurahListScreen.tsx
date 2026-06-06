@@ -70,7 +70,7 @@ export default function SurahListScreen({ navigation }: Props) {
           <Text style={styles.surahEnglishName}>{item.englishName}</Text>
           <Text style={styles.surahTranslation}>{item.englishNameTranslation}</Text>
           <Text style={styles.surahMeta}>
-            {item.numberOfAyahs} Ayat • {item.revelationType}
+            {item.numberOfAyahs} Ayat / {item.revelationType}
           </Text>
         </Stack>
         <Text style={styles.surahArabicName}>{item.name}</Text>
@@ -91,12 +91,12 @@ export default function SurahListScreen({ navigation }: Props) {
       >
         <Card style={styles.resumeCard}>
           <View style={styles.resumeIcon}>
-            <Text style={styles.resumeIconText}>▶</Text>
+            <Text style={styles.resumeIconText}>Open</Text>
           </View>
           <Stack gap={2} style={styles.resumeInfo}>
             <Text style={styles.resumeTitle}>Lanjutkan Membaca</Text>
             <Text style={styles.resumeSubtitle}>
-              {lastViewedSurah.englishName} • Ayat {lastViewed.ayahNumber}
+              {lastViewedSurah.englishName} / Ayat {lastViewed.ayahNumber}
             </Text>
           </Stack>
           <Text style={styles.resumeArabic}>{lastViewedSurah.name}</Text>
@@ -140,13 +140,13 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
-    paddingVertical: 24,
+    paddingVertical: 20,
     borderBottomWidth: 1,
     borderBottomColor: quranColors.border,
   },
   headerTitle: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: 30,
+    fontWeight: '700',
     color: quranTint,
   },
   headerTopRow: {
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   aboutButton: {
     borderWidth: 1,
     borderColor: quranColors.border,
-    borderRadius: 999,
+    borderRadius: 8,
     backgroundColor: quranColors.surface,
     paddingHorizontal: 12,
     paddingVertical: 7,
@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
   listContent: {
     paddingHorizontal: 16,
     paddingBottom: 20,
+    paddingTop: 12,
   },
   surahItem: {
     flexDirection: 'row',
@@ -182,12 +183,12 @@ const styles = StyleSheet.create({
     backgroundColor: quranColors.card,
     borderColor: quranColors.border,
     borderRadius: 8,
-    padding: 16,
-    marginTop: 12,
+    padding: 14,
+    marginTop: 8,
   },
   surahNumber: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
     borderRadius: 6,
     backgroundColor: quranColors.surfaceMuted,
     justifyContent: 'center',
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
   },
   surahEnglishName: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
     color: quranColors.foreground,
   },
   surahTranslation: {
@@ -216,31 +217,33 @@ const styles = StyleSheet.create({
     color: quranColors.mutedForeground,
   },
   surahArabicName: {
-    fontSize: 18,
+    fontSize: 17,
     color: quranTint,
-    fontWeight: '500',
+    fontWeight: '700',
   },
   resumeCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: quranColors.surface,
     borderRadius: 8,
-    padding: 16,
-    marginTop: 12,
+    padding: 14,
+    marginTop: 0,
+    marginBottom: 4,
     borderWidth: 1,
-    borderColor: quranTint,
+    borderColor: quranColors.border,
   },
   resumeIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    minWidth: 56,
+    height: 36,
+    borderRadius: 8,
     backgroundColor: quranTint,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
   },
   resumeIconText: {
-    fontSize: 16,
+    fontSize: 12,
+    fontWeight: '700',
     color: quranColors.background,
   },
   resumeInfo: {
@@ -248,7 +251,7 @@ const styles = StyleSheet.create({
   },
   resumeTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     color: quranTint,
   },
   resumeSubtitle: {
