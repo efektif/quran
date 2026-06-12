@@ -16,7 +16,7 @@ import { quranData } from '../data/quran';
 import type { Ayah, Surah } from '../types/quran';
 import type { RootStackParamList } from '../types/navigation';
 import { useLastViewedAyat } from '../hooks/useLastViewedAyat';
-import { quranColors, quranTint } from '../theme/efektifNative';
+import { quranColors, quranNativeTheme, quranTint } from '../theme/efektifNative';
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 0;
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   backButton: {
     minWidth: 72,
     height: 44,
-    borderRadius: 8,
+    borderRadius: quranNativeTheme.radii.md,
     backgroundColor: quranColors.surface,
     borderColor: quranColors.border,
     justifyContent: 'center',
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     borderColor: quranColors.border,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: quranNativeTheme.radii.md,
   },
   progressText: {
     fontSize: 14,
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: quranColors.card,
     borderColor: quranColors.border,
-    borderRadius: 12,
+    borderRadius: quranNativeTheme.radii.md,
     paddingHorizontal: 24,
     paddingVertical: 72,
   },
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     borderColor: quranColors.border,
     paddingHorizontal: 20,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: quranNativeTheme.radii.md,
     marginBottom: 40,
   },
   surahBadgeText: {
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
   verseNumberBadge: {
     width: 44,
     height: 44,
-    borderRadius: 8,
+    borderRadius: quranNativeTheme.radii.md,
     backgroundColor: quranTint,
     justifyContent: 'center',
     alignItems: 'center',
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingHorizontal: 24,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: quranNativeTheme.radii.md,
     borderWidth: 1,
     borderColor: quranColors.border,
   },

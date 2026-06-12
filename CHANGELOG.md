@@ -17,6 +17,7 @@ This project follows Semantic Versioning for app-level releases.
 - Updated the Quran list and reader surfaces to follow the neutral, flat, border-first Efektif Tools visual direction.
 - Moved Quran list and reader surfaces onto Efektif native primitives while preserving React Navigation behavior.
 - Centralized Quran theme setup through the Efektif native provider contract, with a compatibility fallback for the published native package.
+- Tightened the mobile chrome to use Efektif native radius tokens on cards, badges, and actions.
 
 ## [1.0.0] - 2026-05-03
 

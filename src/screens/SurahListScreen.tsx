@@ -7,7 +7,7 @@ import { quranData } from '../data/quran';
 import type { Surah } from '../types/quran';
 import type { RootStackParamList } from '../types/navigation';
 import { useLastViewedAyat, type LastViewedAyat } from '../hooks/useLastViewedAyat';
-import { quranColors, quranTint } from '../theme/efektifNative';
+import { quranColors, quranNativeTheme, quranTint } from '../theme/efektifNative';
 
 const ABOUT_URL = 'https://x.com/morizkay';
 
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   aboutButton: {
     borderWidth: 1,
     borderColor: quranColors.border,
-    borderRadius: 8,
+    borderRadius: quranNativeTheme.radii.md,
     backgroundColor: quranColors.surface,
     paddingHorizontal: 12,
     paddingVertical: 7,
@@ -182,14 +182,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: quranColors.card,
     borderColor: quranColors.border,
-    borderRadius: 8,
+    borderRadius: quranNativeTheme.radii.md,
     padding: 14,
     marginTop: 8,
   },
   surahNumber: {
     width: 36,
     height: 36,
-    borderRadius: 6,
+    borderRadius: quranNativeTheme.radii.sm,
     backgroundColor: quranColors.surfaceMuted,
     justifyContent: 'center',
     alignItems: 'center',
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: quranColors.surface,
-    borderRadius: 8,
+    borderRadius: quranNativeTheme.radii.md,
     padding: 14,
     marginTop: 0,
     marginBottom: 4,
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   resumeIcon: {
     minWidth: 56,
     height: 36,
-    borderRadius: 8,
+    borderRadius: quranNativeTheme.radii.md,
     backgroundColor: quranTint,
     justifyContent: 'center',
     alignItems: 'center',
