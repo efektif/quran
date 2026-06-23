@@ -175,3 +175,10 @@ describe('Button', () => {
 ```
 
 Test files: `*.test.ts(x)` in `__tests__/` or colocated with source.
+
+## Hosting Decision
+
+- **Decision:** Free tier/static/mobile; VPS not needed.
+- Expo web export can deploy to Cloudflare Pages free tier.
+- Mobile app distribution does not require VPS.
+
