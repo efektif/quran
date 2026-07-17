@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    ".archive/**",
+    ".expo/**",
+    ".next/**",
+    ".svelte-kit/**",
+    "build/**",
+    "coverage/**",
+    "dist/**",
+    "node_modules/**",
+    "src-tauri/gen/**",
+    "src-tauri/target/**"
+  ]
+}
