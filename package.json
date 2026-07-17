@@ -9,7 +9,10 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build": "expo export --platform web",
-    "deploy": "expo export --platform web && bunx wrangler pages deploy dist --project-name ${CLOUDFLARE_PAGES_PROJECT:-efektif-quran}"
+    "deploy": "expo export --platform web && bunx wrangler pages deploy dist --project-name ${CLOUDFLARE_PAGES_PROJECT:-efektif-quran}",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt ."
   },
   "dependencies": {
     "@efektif/native": "^0.2.2",
@@ -39,7 +42,9 @@
   "devDependencies": {
     "@types/bun": "^1.3.6",
     "@types/react": "~19.1.0",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "oxfmt": "^0.59.0",
+    "oxlint": "^1.74.0"
   },
   "private": true
 }

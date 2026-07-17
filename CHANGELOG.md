@@ -19,6 +19,7 @@ This project follows Semantic Versioning for app-level releases.
 - Centralized Quran theme setup through the Efektif native provider contract, with a compatibility fallback for the published native package.
 - Tightened the mobile chrome to use Efektif native radius tokens on cards, badges, and actions.
 - Migrated navigation to Expo Router with shared web, iOS, and Android routes for the Surah list and reader.
+- Standardized repository linting and formatting on Oxlint and Oxfmt.
 
 ## [1.0.0] - 2026-05-03
 
