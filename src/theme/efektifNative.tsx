@@ -32,8 +32,23 @@ export const quranNativeTheme =
     tint: 'default',
   }) ?? (EfektifNative.darkTheme as QuranNativeTheme);
 
-export const quranColors = quranNativeTheme.colors;
-export const quranTint = quranNativeTheme.colors.tint;
+export const quranColors = {
+  ...quranNativeTheme.colors,
+  background: '#f6f7f9',
+  foreground: '#121418',
+  card: '#ffffff',
+  cardForeground: '#121418',
+  surface: '#f0f2f5',
+  surfaceMuted: '#e3e7ec',
+  mutedForeground: '#68717d',
+  border: 'rgba(18, 20, 24, 0.14)',
+  primary: '#f6821f',
+  primaryForeground: '#241204',
+  accent: '#fff0df',
+  accentForeground: '#9a4100',
+  ring: '#0c6bdb',
+} as const;
+export const quranTint = '#f6821f';
 
 export function QuranThemeProvider({ children }: { children: ReactNode }) {
   const Provider = nativeApi.EfektifNativeProvider;
