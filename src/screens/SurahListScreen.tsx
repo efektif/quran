@@ -1,35 +1,25 @@
-import { useCallback, useState, useMemo, useEffect } from 'react';
+import { useCallback, useState, useMemo } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { StyleSheet, View, FlatList, Pressable, Linking } from 'react-native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Card, ListItem, Screen, Stack, Text } from '@efektif/native';
 
 import { quranData } from '../data/quran';
 import type { Surah } from '../types/quran';
-import type { RootStackParamList } from '../types/navigation';
 import { useLastViewedAyat, type LastViewedAyat } from '../hooks/useLastViewedAyat';
 import { quranColors, quranNativeTheme, quranTint } from '../theme/efektifNative';
 
 const ABOUT_URL = 'https://x.com/morizkay';
 
-interface Props {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'SurahList'>;
-}
-
-export default function SurahListScreen({ navigation }: Props) {
+export default function SurahListScreen() {
+  const router = useRouter();
   const { getLastViewed, isLoaded } = useLastViewedAyat();
   const [lastViewed, setLastViewed] = useState<LastViewedAyat | null>(null);
 
-  // Refresh last viewed position when screen gains focus or storage loads
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    const unsubscribe = navigation.addListener('focus', () => {
-      setLastViewed(getLastViewed());
-    });
-    // Also load on initial mount
-    setLastViewed(getLastViewed());
-    return unsubscribe;
-  }, [navigation, getLastViewed, isLoaded]);
+  useFocusEffect(
+    useCallback(() => {
+      if (isLoaded) setLastViewed(getLastViewed());
+    }, [getLastViewed, isLoaded]),
+  );
 
   const lastViewedSurah = useMemo(() => {
     if (!lastViewed) return null;
@@ -37,20 +27,22 @@ export default function SurahListScreen({ navigation }: Props) {
   }, [lastViewed]);
 
   const handleSurahPress = useCallback((surah: Surah) => {
-    navigation.navigate('VerseReader', {
-      surahNumber: surah.number,
-      startAyah: 1,
+    router.push({
+      pathname: '/reader',
+      params: { surahNumber: String(surah.number), startAyah: '1' },
     });
-  }, [navigation]);
+  }, [router]);
 
   const handleResumePress = useCallback(() => {
-    if (lastViewed) {
-      navigation.navigate('VerseReader', {
-        surahNumber: lastViewed.surahNumber,
-        startAyah: lastViewed.ayahNumber,
-      });
-    }
-  }, [navigation, lastViewed]);
+    if (!lastViewed) return;
+    router.push({
+      pathname: '/reader',
+      params: {
+        surahNumber: String(lastViewed.surahNumber),
+        startAyah: String(lastViewed.ayahNumber),
+      },
+    });
+  }, [router, lastViewed]);
 
   const handleAboutPress = useCallback(() => {
     void Linking.openURL(ABOUT_URL);

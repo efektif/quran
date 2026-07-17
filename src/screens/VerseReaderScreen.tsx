@@ -8,13 +8,11 @@ import {
   Platform,
   Linking,
 } from 'react-native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RouteProp } from '@react-navigation/native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Button, Card, Screen, Text } from '@efektif/native';
 
 import { quranData } from '../data/quran';
 import type { Ayah, Surah } from '../types/quran';
-import type { RootStackParamList } from '../types/navigation';
 import { useLastViewedAyat } from '../hooks/useLastViewedAyat';
 import { quranColors, quranNativeTheme, quranTint } from '../theme/efektifNative';
 
@@ -23,18 +21,23 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight ||
 const NAVBAR_HEIGHT = Platform.OS === 'ios' ? 34 : 0;
 const CONTENT_HEIGHT = SCREEN_HEIGHT - STATUSBAR_HEIGHT - NAVBAR_HEIGHT;
 
-interface Props {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'VerseReader'>;
-  route: RouteProp<RootStackParamList, 'VerseReader'>;
-}
 
 interface VerseItem {
   ayah: Ayah;
   surah: Surah;
 }
 
-export default function VerseReaderScreen({ navigation, route }: Props) {
-  const { surahNumber, startAyah = 1 } = route.params;
+export default function VerseReaderScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams<{
+    surahNumber?: string | string[];
+    startAyah?: string | string[];
+  }>();
+  const surahValue = Array.isArray(params.surahNumber) ? params.surahNumber[0] : params.surahNumber;
+  const startAyahValue = Array.isArray(params.startAyah) ? params.startAyah[0] : params.startAyah;
+  const surahNumber = Number(surahValue);
+  const parsedStartAyah = Number(startAyahValue ?? 1);
+  const startAyah = Number.isInteger(parsedStartAyah) && parsedStartAyah > 0 ? parsedStartAyah : 1;
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { saveLastViewed } = useLastViewedAyat();
@@ -90,8 +93,8 @@ export default function VerseReaderScreen({ navigation, route }: Props) {
   }), []);
 
   const handleBack = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
+    router.back();
+  }, [router]);
 
   const renderAyahItem = useCallback(({ item }: { item: VerseItem }) => {
     const { ayah, surah: currentSurah } = item;
