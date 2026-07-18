@@ -2,6 +2,8 @@ export interface Ayah {
   number: number;
   numberInSurah: number;
   text: string;
+  translation: string;
+  translationFootnotes?: string;
   juz: number;
   page: number;
   hizbQuarter: number;
@@ -13,7 +15,7 @@ export interface Surah {
   englishName: string;
   englishNameTranslation: string;
   numberOfAyahs: number;
-  revelationType: 'Meccan' | 'Medinan';
+  revelationType: "Meccan" | "Medinan";
   ayahs: Ayah[];
 }
 

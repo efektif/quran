@@ -1,26 +1,26 @@
-import { useCallback, useRef, useState, useMemo, useEffect } from 'react';
+import { useCallback, useRef, useState, useMemo, useEffect } from "react";
 import {
-  StyleSheet,
-  View,
   Dimensions,
   FlatList,
-  StatusBar,
-  Platform,
   Linking,
-} from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Button, Card, Screen, Text } from '@efektif/native';
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  View,
+} from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Button, Card, Screen, Text } from "@efektif/native";
 
-import { quranData } from '../data/quran';
-import type { Ayah, Surah } from '../types/quran';
-import { useLastViewedAyat } from '../hooks/useLastViewedAyat';
-import { quranColors, quranNativeTheme, quranTint } from '../theme/efektifNative';
+import { quranData } from "../data/quran";
+import type { Ayah, Surah } from "../types/quran";
+import { useLastViewedAyat } from "../hooks/useLastViewedAyat";
+import { quranColors, quranNativeTheme, quranTint } from "../theme/efektifNative";
 
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 0;
-const NAVBAR_HEIGHT = Platform.OS === 'ios' ? 34 : 0;
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
+const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0;
+const NAVBAR_HEIGHT = Platform.OS === "ios" ? 34 : 0;
 const CONTENT_HEIGHT = SCREEN_HEIGHT - STATUSBAR_HEIGHT - NAVBAR_HEIGHT;
-
 
 interface VerseItem {
   ayah: Ayah;
@@ -44,14 +44,14 @@ export default function VerseReaderScreen() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentAyahRef = useRef({ surahNumber, ayahNumber: startAyah });
 
-  const surah = useMemo(() => 
-    quranData.surahs.find(s => s.number === surahNumber),
-    [surahNumber]
+  const surah = useMemo(
+    () => quranData.surahs.find((s) => s.number === surahNumber),
+    [surahNumber],
   );
 
   const verses: VerseItem[] = useMemo(() => {
     if (!surah) return [];
-    return surah.ayahs.map(ayah => ({ ayah, surah }));
+    return surah.ayahs.map((ayah) => ({ ayah, surah }));
   }, [surah]);
 
   const initialScrollIndex = useMemo(() => {
@@ -69,28 +69,34 @@ export default function VerseReaderScreen() {
     };
   }, [saveLastViewed]);
 
-  const handleViewableItemsChanged = useCallback(({ viewableItems }: { viewableItems: Array<{ index: number | null }> }) => {
-    if (viewableItems.length > 0 && viewableItems[0].index !== null) {
-      const newIndex = viewableItems[0].index;
-      setCurrentIndex(newIndex);
+  const handleViewableItemsChanged = useCallback(
+    ({ viewableItems }: { viewableItems: Array<{ index: number | null }> }) => {
+      if (viewableItems.length > 0 && viewableItems[0].index !== null) {
+        const newIndex = viewableItems[0].index;
+        setCurrentIndex(newIndex);
 
-      // Track current ayah for unmount save
-      const ayahNumber = newIndex + 1;
-      currentAyahRef.current = { surahNumber, ayahNumber };
+        // Track current ayah for unmount save
+        const ayahNumber = newIndex + 1;
+        currentAyahRef.current = { surahNumber, ayahNumber };
 
-      // Debounced save to storage
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
+        // Debounced save to storage
+        if (debounceRef.current) {
+          clearTimeout(debounceRef.current);
+        }
+        debounceRef.current = setTimeout(() => {
+          saveLastViewed(surahNumber, ayahNumber);
+        }, 500);
       }
-      debounceRef.current = setTimeout(() => {
-        saveLastViewed(surahNumber, ayahNumber);
-      }, 500);
-    }
-  }, [surahNumber, saveLastViewed]);
+    },
+    [surahNumber, saveLastViewed],
+  );
 
-  const viewabilityConfig = useMemo(() => ({
-    itemVisiblePercentThreshold: 50,
-  }), []);
+  const viewabilityConfig = useMemo(
+    () => ({
+      itemVisiblePercentThreshold: 50,
+    }),
+    [],
+  );
 
   const handleBack = useCallback(() => {
     router.back();
@@ -98,68 +104,84 @@ export default function VerseReaderScreen() {
 
   const renderAyahItem = useCallback(({ item }: { item: VerseItem }) => {
     const { ayah, surah: currentSurah } = item;
-    
+
     return (
       <View style={styles.ayahContainer}>
-        <Card style={styles.ayahContent}>
-          {/* Surah info at top */}
-          <Card style={styles.surahBadge}>
-            <Text variant="subtitle" style={styles.surahBadgeText}>
-              {currentSurah.englishName}
-            </Text>
-          </Card>
+        <ScrollView
+          style={styles.ayahScroll}
+          contentContainerStyle={styles.ayahScrollContent}
+          nestedScrollEnabled
+          showsVerticalScrollIndicator={false}
+        >
+          <Card style={styles.ayahContent}>
+            {/* Surah info at top */}
+            <Card style={styles.surahBadge}>
+              <Text variant="subtitle" style={styles.surahBadgeText}>
+                {currentSurah.englishName}
+              </Text>
+            </Card>
 
-          {/* Arabic verse - centered */}
-          <View style={styles.arabicContainer}>
-            <Text style={styles.arabicText}>
-              {ayah.text}
-            </Text>
-          </View>
+            {/* Arabic verse - centered */}
+            <View style={styles.arabicContainer}>
+              <Text style={styles.arabicText}>{ayah.text}</Text>
+            </View>
 
-          {/* Verse number indicator */}
-          <View style={styles.verseIndicator}>
-            <View style={styles.verseNumberBadge}>
-              <Text style={styles.verseNumberText}>
-                {ayah.numberInSurah}
+            <View style={styles.translationContainer}>
+              <Text style={styles.translationLabel}>Terjemahan Kemenag RI</Text>
+              <Text style={styles.translationText}>{ayah.translation}</Text>
+              {ayah.translationFootnotes ? (
+                <Text style={styles.translationFootnotes}>{ayah.translationFootnotes}</Text>
+              ) : null}
+            </View>
+
+            {/* Verse number indicator */}
+            <View style={styles.verseIndicator}>
+              <View style={styles.verseNumberBadge}>
+                <Text style={styles.verseNumberText}>{ayah.numberInSurah}</Text>
+              </View>
+              <Text style={styles.verseMeta}>
+                Ayat {ayah.numberInSurah} dari {currentSurah.numberOfAyahs}
               </Text>
             </View>
-            <Text style={styles.verseMeta}>
-              Ayat {ayah.numberInSurah} dari {currentSurah.numberOfAyahs}
-            </Text>
-          </View>
 
-          {/* Juz and Page info */}
-          <View style={styles.metaInfo}>
-            <Text style={styles.metaText}>Juz {ayah.juz}</Text>
-            <Text style={styles.metaDivider}>/</Text>
-            <Text style={styles.metaText}>Halaman {ayah.page}</Text>
-          </View>
+            {/* Juz and Page info */}
+            <View style={styles.metaInfo}>
+              <Text style={styles.metaText}>Juz {ayah.juz}</Text>
+              <Text style={styles.metaDivider}>/</Text>
+              <Text style={styles.metaText}>Halaman {ayah.page}</Text>
+            </View>
 
-          {/* Tafseer link */}
-          <Button
-            variant="outline"
-            size="sm"
-            style={styles.tafseerButton}
-            textStyle={styles.tafseerButtonText}
-            onPress={() => Linking.openURL(`https://quran.com/${currentSurah.number}/${ayah.numberInSurah}`)}
-          >
-            Baca Tafseer
-          </Button>
-        </Card>
+            {/* Tafseer link */}
+            <Button
+              variant="outline"
+              size="sm"
+              style={styles.tafseerButton}
+              textStyle={styles.tafseerButtonText}
+              onPress={() =>
+                Linking.openURL(`https://quran.com/${currentSurah.number}/${ayah.numberInSurah}`)
+              }
+            >
+              Baca Tafseer
+            </Button>
+          </Card>
+        </ScrollView>
       </View>
     );
   }, []);
 
-  const keyExtractor = useCallback((item: VerseItem) => 
-    `${item.surah.number}-${item.ayah.numberInSurah}`,
-    []
+  const keyExtractor = useCallback(
+    (item: VerseItem) => `${item.surah.number}-${item.ayah.numberInSurah}`,
+    [],
   );
 
-  const getItemLayout = useCallback((_: unknown, index: number) => ({
-    length: CONTENT_HEIGHT,
-    offset: CONTENT_HEIGHT * index,
-    index,
-  }), []);
+  const getItemLayout = useCallback(
+    (_: unknown, index: number) => ({
+      length: CONTENT_HEIGHT,
+      offset: CONTENT_HEIGHT * index,
+      index,
+    }),
+    [],
+  );
 
   if (!surah) {
     return (
@@ -172,13 +194,13 @@ export default function VerseReaderScreen() {
   return (
     <Screen style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={quranColors.background} />
-      
+
       {/* Back button overlay */}
       <View style={styles.headerOverlay}>
         <Button
           variant="secondary"
           size="sm"
-          style={styles.backButton} 
+          style={styles.backButton}
           textStyle={styles.backButtonText}
           onPress={handleBack}
           accessibilityLabel="Kembali ke daftar surah"
@@ -199,6 +221,7 @@ export default function VerseReaderScreen() {
         renderItem={renderAyahItem}
         keyExtractor={keyExtractor}
         pagingEnabled
+        nestedScrollEnabled
         showsVerticalScrollIndicator={false}
         snapToInterval={CONTENT_HEIGHT}
         snapToAlignment="start"
@@ -226,16 +249,16 @@ const styles = StyleSheet.create({
     backgroundColor: quranColors.background,
   },
   headerOverlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     zIndex: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 50 : 16,
+    paddingTop: Platform.OS === "ios" ? 50 : 16,
   },
   backButton: {
     minWidth: 72,
@@ -243,14 +266,14 @@ const styles = StyleSheet.create({
     borderRadius: quranNativeTheme.radii.md,
     backgroundColor: quranColors.surface,
     borderColor: quranColors.border,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 0,
   },
   backButtonText: {
     fontSize: 13,
     color: quranColors.foreground,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   progressContainer: {
     backgroundColor: quranColors.surface,
@@ -262,25 +285,33 @@ const styles = StyleSheet.create({
   progressText: {
     fontSize: 14,
     color: quranTint,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   ayahContainer: {
     height: CONTENT_HEIGHT,
     width: SCREEN_WIDTH,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 16,
   },
-  ayahContent: {
+  ayahScroll: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
+    width: "100%",
+  },
+  ayahScrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+  },
+  ayahContent: {
+    minHeight: CONTENT_HEIGHT - 16,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
     backgroundColor: quranColors.card,
     borderColor: quranColors.border,
     borderRadius: quranNativeTheme.radii.md,
     paddingHorizontal: 24,
-    paddingVertical: 72,
+    paddingVertical: 76,
   },
   surahBadge: {
     backgroundColor: quranColors.surface,
@@ -288,52 +319,78 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: quranNativeTheme.radii.md,
-    marginBottom: 40,
+    marginBottom: 32,
   },
   surahBadgeText: {
     fontSize: 14,
     color: quranColors.mutedForeground,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   arabicContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   arabicText: {
     fontSize: 36,
     lineHeight: 72,
     color: quranColors.foreground,
-    textAlign: 'center',
-    fontWeight: '400',
-    writingDirection: 'rtl',
+    textAlign: "center",
+    fontWeight: "400",
+    writingDirection: "rtl",
+  },
+  translationContainer: {
+    width: "100%",
+    marginTop: 28,
+    paddingTop: 24,
+    borderTopWidth: 1,
+    borderTopColor: quranColors.border,
+  },
+  translationLabel: {
+    marginBottom: 10,
+    color: quranTint,
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+  },
+  translationText: {
+    color: quranColors.foreground,
+    fontSize: 18,
+    lineHeight: 30,
+  },
+  translationFootnotes: {
+    marginTop: 16,
+    color: quranColors.mutedForeground,
+    fontSize: 13,
+    lineHeight: 21,
   },
   verseIndicator: {
-    alignItems: 'center',
-    marginTop: 40,
+    alignItems: "center",
+    marginTop: 32,
   },
   verseNumberBadge: {
     width: 44,
     height: 44,
     borderRadius: quranNativeTheme.radii.md,
     backgroundColor: quranTint,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 12,
   },
   verseNumberText: {
     fontSize: 16,
     color: quranColors.background,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   verseMeta: {
     fontSize: 14,
     color: quranColors.mutedForeground,
   },
   metaInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 20,
   },
   metaText: {
@@ -356,14 +413,14 @@ const styles = StyleSheet.create({
   tafseerButtonText: {
     fontSize: 13,
     color: quranColors.foreground,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   swipeHint: {
-    position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 50 : 30,
+    position: "absolute",
+    bottom: Platform.OS === "ios" ? 50 : 30,
     left: 0,
     right: 0,
-    alignItems: 'center',
+    alignItems: "center",
   },
   swipeHintText: {
     fontSize: 12,
@@ -372,7 +429,7 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 18,
     color: quranColors.foreground,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 100,
   },
 });
