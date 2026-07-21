@@ -34,21 +34,21 @@ export const quranNativeTheme =
 
 export const quranColors = {
   ...quranNativeTheme.colors,
-  background: '#f6f7f9',
-  foreground: '#121418',
-  card: '#ffffff',
-  cardForeground: '#121418',
-  surface: '#f0f2f5',
-  surfaceMuted: '#e3e7ec',
-  mutedForeground: '#68717d',
-  border: 'rgba(18, 20, 24, 0.14)',
-  primary: '#f6821f',
-  primaryForeground: '#241204',
-  accent: '#fff0df',
-  accentForeground: '#9a4100',
-  ring: '#0c6bdb',
+  background: '#ffffff',
+  foreground: '#0a0a0a',
+  card: '#f7f7f7',
+  cardForeground: '#0a0a0a',
+  surface: '#fafafa',
+  surfaceMuted: '#f0f0f0',
+  mutedForeground: '#4b4b4b',
+  border: '#e5e5e5',
+  primary: '#2563eb',
+  primaryForeground: '#ffffff',
+  accent: '#eff6ff',
+  accentForeground: '#1e40af',
+  ring: '#2563eb',
 } as const;
-export const quranTint = '#f6821f';
+export const quranTint = '#2563eb';
 
 export function QuranThemeProvider({ children }: { children: ReactNode }) {
   const Provider = nativeApi.EfektifNativeProvider;
