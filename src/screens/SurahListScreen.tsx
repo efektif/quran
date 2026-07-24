@@ -90,24 +90,24 @@ export default function SurahListScreen() {
     if (!lastViewed || !lastViewedSurah) return null;
 
     return (
-      <Pressable
+      <Card
         onPress={handleResumePress}
+        padding="none"
         accessibilityRole="button"
         accessibilityLabel={`Lanjutkan membaca ${lastViewedSurah.englishName} ayat ${lastViewed.ayahNumber}`}
+        style={styles.resumeCard}
       >
-        <Card style={styles.resumeCard}>
-          <View style={styles.resumeIcon}>
-            <Text style={styles.resumeIconText}>Open</Text>
-          </View>
-          <Stack gap={2} style={styles.resumeInfo}>
-            <Text style={styles.resumeTitle}>Lanjutkan Membaca</Text>
-            <Text style={styles.resumeSubtitle}>
-              {lastViewedSurah.englishName} / Ayat {lastViewed.ayahNumber}
-            </Text>
-          </Stack>
-          <Text style={styles.resumeArabic}>{lastViewedSurah.name}</Text>
-        </Card>
-      </Pressable>
+        <View style={styles.resumeIcon}>
+          <Text style={styles.resumeIconText}>Open</Text>
+        </View>
+        <Stack gap={2} style={styles.resumeInfo}>
+          <Text style={styles.resumeTitle}>Lanjutkan Membaca</Text>
+          <Text style={styles.resumeSubtitle}>
+            {lastViewedSurah.englishName} / Ayat {lastViewed.ayahNumber}
+          </Text>
+        </Stack>
+        <Text style={styles.resumeArabic}>{lastViewedSurah.name}</Text>
+      </Card>
     );
   }, [lastViewed, lastViewedSurah, handleResumePress]);
 
@@ -145,11 +145,13 @@ export default function SurahListScreen() {
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
       />
-      <AlKahfReminderModal
-        visible={alKahfVisible}
-        onDismiss={dismissAlKahf}
-        onRead={handleReadAlKahf}
-      />
+      {alKahfVisible ? (
+        <AlKahfReminderModal
+          visible={alKahfVisible}
+          onDismiss={dismissAlKahf}
+          onRead={handleReadAlKahf}
+        />
+      ) : null}
     </Screen>
   );
 }

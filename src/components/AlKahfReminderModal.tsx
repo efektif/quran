@@ -1,4 +1,4 @@
-import { Modal, Pressable, StyleSheet } from "react-native";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 import { Button, Stack, Text } from "@efektif/native";
 
 import { quranColors, quranNativeTheme, quranTint } from "../theme/efektifNative";
@@ -14,9 +14,11 @@ export function AlKahfReminderModal({
   onDismiss,
   onRead,
 }: AlKahfReminderModalProps) {
+  if (!visible) return null;
+
   return (
     <Modal
-      visible={visible}
+      visible
       transparent
       animationType="fade"
       onRequestClose={onDismiss}
@@ -28,10 +30,9 @@ export function AlKahfReminderModal({
         accessibilityRole="button"
         accessibilityLabel="Tutup pengingat Al-Kahf"
       >
-        <Pressable
+        <View
           style={styles.card}
-          onPress={(event) => event.stopPropagation()}
-          accessibilityRole="none"
+          onStartShouldSetResponder={() => true}
         >
           <Stack gap={12}>
             <Text style={styles.eyebrow}>Malam Jumat / Jumat</Text>
@@ -54,7 +55,7 @@ export function AlKahfReminderModal({
               </Button>
             </Stack>
           </Stack>
-        </Pressable>
+        </View>
       </Pressable>
     </Modal>
   );
