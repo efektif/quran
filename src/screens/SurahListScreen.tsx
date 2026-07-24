@@ -65,25 +65,23 @@ export default function SurahListScreen() {
   }, [dismissAlKahf, router]);
 
   const renderSurahItem = useCallback(({ item }: { item: Surah }) => (
-    <Pressable
+    <ListItem
       onPress={() => handleSurahPress(item)}
-      accessibilityRole="button"
       accessibilityLabel={`Buka surah ${item.englishName}`}
+      style={styles.surahItem}
     >
-      <ListItem style={styles.surahItem}>
-        <View style={styles.surahNumber}>
-          <Text style={styles.surahNumberText}>{item.number}</Text>
-        </View>
-        <Stack gap={2} style={styles.surahInfo}>
-          <Text style={styles.surahEnglishName}>{item.englishName}</Text>
-          <Text style={styles.surahTranslation}>{item.englishNameTranslation}</Text>
-          <Text style={styles.surahMeta}>
-            {item.numberOfAyahs} Ayat / {item.revelationType}
-          </Text>
-        </Stack>
-        <Text style={styles.surahArabicName}>{item.name}</Text>
-      </ListItem>
-    </Pressable>
+      <View style={styles.surahNumber}>
+        <Text style={styles.surahNumberText}>{item.number}</Text>
+      </View>
+      <Stack gap={2} style={styles.surahInfo}>
+        <Text style={styles.surahEnglishName}>{item.englishName}</Text>
+        <Text style={styles.surahTranslation}>{item.englishNameTranslation}</Text>
+        <Text style={styles.surahMeta}>
+          {item.numberOfAyahs} Ayat / {item.revelationType}
+        </Text>
+      </Stack>
+      <Text style={styles.surahArabicName}>{item.name}</Text>
+    </ListItem>
   ), [handleSurahPress]);
 
   const keyExtractor = useCallback((item: Surah) => item.number.toString(), []);
