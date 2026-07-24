@@ -52,6 +52,10 @@ export default function SurahListScreen() {
     void Linking.openURL(ABOUT_URL);
   }, []);
 
+  const handleChangelogPress = useCallback(() => {
+    router.push('/changelog');
+  }, [router]);
+
   const handleReadAlKahf = useCallback(() => {
     dismissAlKahf();
     router.push({
@@ -114,14 +118,24 @@ export default function SurahListScreen() {
       <Stack gap={4} style={styles.header}>
         <View style={styles.headerTopRow}>
           <Text variant="title" style={styles.headerTitle}>Al-Quran</Text>
-          <Pressable
-            onPress={handleAboutPress}
-            accessibilityRole="link"
-            accessibilityLabel="Buka profil Moriz Kay"
-            style={styles.aboutButton}
-          >
-            <Text style={styles.aboutButtonText}>About</Text>
-          </Pressable>
+          <View style={styles.headerActions}>
+            <Pressable
+              onPress={handleChangelogPress}
+              accessibilityRole="button"
+              accessibilityLabel="Buka Changelog"
+              style={styles.headerButton}
+            >
+              <Text style={styles.headerButtonText}>Changelog</Text>
+            </Pressable>
+            <Pressable
+              onPress={handleAboutPress}
+              accessibilityRole="link"
+              accessibilityLabel="Buka profil Moriz Kay"
+              style={styles.headerButton}
+            >
+              <Text style={styles.headerButtonText}>About</Text>
+            </Pressable>
+          </View>
         </View>
         <Text variant="subtitle" style={styles.headerSubtitle}>Pilih Surah untuk dibaca</Text>
       </Stack>
@@ -164,7 +178,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: 12,
   },
-  aboutButton: {
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  headerButton: {
     borderWidth: 1,
     borderColor: quranColors.border,
     borderRadius: quranNativeTheme.radii.md,
@@ -172,7 +191,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 7,
   },
-  aboutButtonText: {
+  headerButtonText: {
     color: quranTint,
     fontSize: 12,
     fontWeight: '700',

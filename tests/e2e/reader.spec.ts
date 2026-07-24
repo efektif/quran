@@ -18,3 +18,14 @@ test("opens a surah from the catalog", async ({ page }) => {
       .first(),
   ).toBeVisible();
 });
+
+test("opens the changelog page", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByLabel("Buka Changelog").click();
+
+  await expect(page).toHaveURL(/\/changelog/);
+  await expect(page.getByText("Changelog", { exact: true })).toBeVisible();
+  await expect(page.getByText("2026-07-24", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Kembali ke daftar surah" })).toBeVisible();
+});

@@ -16,6 +16,7 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="index" />
+          <Stack.Screen name="changelog" />
           <Stack.Screen name="reader" options={{ animation: 'slide_from_bottom' }} />
         </Stack>
       </QuranThemeProvider>
