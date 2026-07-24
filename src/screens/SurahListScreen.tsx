@@ -3,16 +3,20 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { StyleSheet, View, FlatList, Pressable, Linking } from 'react-native';
 import { Card, ListItem, Screen, Stack, Text } from '@efektif/native';
 
+import { AlKahfReminderModal } from '../components/AlKahfReminderModal';
 import { quranData } from '../data/quran';
 import type { Surah } from '../types/quran';
+import { useAlKahfReminder } from '../hooks/useAlKahfReminder';
 import { useLastViewedAyat, type LastViewedAyat } from '../hooks/useLastViewedAyat';
 import { quranColors, quranNativeTheme, quranTint } from '../theme/efektifNative';
+import { AL_KAHF_SURAH_NUMBER } from '../utils/alKahfReminder';
 
 const ABOUT_URL = 'https://x.com/morizkay';
 
 export default function SurahListScreen() {
   const router = useRouter();
   const { getLastViewed, isLoaded } = useLastViewedAyat();
+  const { visible: alKahfVisible, dismiss: dismissAlKahf } = useAlKahfReminder();
   const [lastViewed, setLastViewed] = useState<LastViewedAyat | null>(null);
 
   useFocusEffect(
@@ -47,6 +51,14 @@ export default function SurahListScreen() {
   const handleAboutPress = useCallback(() => {
     void Linking.openURL(ABOUT_URL);
   }, []);
+
+  const handleReadAlKahf = useCallback(() => {
+    dismissAlKahf();
+    router.push({
+      pathname: '/reader',
+      params: { surahNumber: String(AL_KAHF_SURAH_NUMBER), startAyah: '1' },
+    });
+  }, [dismissAlKahf, router]);
 
   const renderSurahItem = useCallback(({ item }: { item: Surah }) => (
     <Pressable
@@ -120,6 +132,11 @@ export default function SurahListScreen() {
         ListHeaderComponent={renderHeader}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
+      />
+      <AlKahfReminderModal
+        visible={alKahfVisible}
+        onDismiss={dismissAlKahf}
+        onRead={handleReadAlKahf}
       />
     </Screen>
   );
