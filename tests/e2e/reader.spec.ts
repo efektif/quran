@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 async function dismissAlKahfReminder(page: import("@playwright/test").Page) {
-  const dismiss = page.getByLabel("Tutup pengingat", { exact: true });
+  const dismiss = page.getByLabel("Tutup pengingat Al-Kahf", { exact: true });
   await dismiss.waitFor({ state: "visible", timeout: 3_000 }).catch(() => {});
   if (await dismiss.isVisible().catch(() => false)) await dismiss.click();
 }
