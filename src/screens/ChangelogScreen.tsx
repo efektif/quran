@@ -1,10 +1,16 @@
 import { useCallback } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
-import { Screen, Stack, Text } from "@efektif/native";
 
 import { CHANGELOG_RELEASES } from "../data/changelog";
-import { quranColors, quranNativeTheme, quranTint } from "../theme/efektifNative";
+import {
+  quranColors,
+  quranTheme,
+  quranTint,
+  Screen,
+  Stack,
+  Text,
+} from "../design-system";
 
 export default function ChangelogScreen() {
   const router = useRouter();
@@ -88,7 +94,7 @@ const styles = StyleSheet.create({
   backButton: {
     borderWidth: 1,
     borderColor: quranColors.border,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
     backgroundColor: quranColors.surface,
     paddingHorizontal: 12,
     paddingVertical: 7,
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
   panel: {
     borderWidth: 1,
     borderColor: quranColors.border,
-    borderRadius: quranNativeTheme.radii.lg,
+    borderRadius: quranTheme.radii.lg,
     backgroundColor: quranColors.surface,
     overflow: "hidden",
   },

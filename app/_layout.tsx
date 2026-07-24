@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { QuranThemeProvider, quranColors } from '../src/theme/efektifNative';
+import { QuranThemeProvider, quranColors } from '../src/design-system';
 
 export default function RootLayout() {
   return (

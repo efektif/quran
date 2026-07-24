@@ -15,6 +15,11 @@ This project follows Semantic Versioning for app-level releases.
 
 - Surah list taps open the reader again (nested pressable was swallowing the press).
 
+### Changed
+
+- Localized the native design primitives and tokens so installation and
+  deployment no longer require a sibling Efektif UI checkout.
+
 ## [1.1.0] - 2026-07-21
 
 ### Added

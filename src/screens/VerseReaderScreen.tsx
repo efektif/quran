@@ -10,12 +10,19 @@ import {
   View,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Button, Card, Screen, Text } from "@efektif/native";
 
 import { quranData } from "../data/quran";
+import {
+  Button,
+  Card,
+  quranColors,
+  quranTheme,
+  quranTint,
+  Screen,
+  Text,
+} from "../design-system";
 import type { Ayah, Surah } from "../types/quran";
 import { useLastViewedAyat } from "../hooks/useLastViewedAyat";
-import { quranColors, quranNativeTheme, quranTint } from "../theme/efektifNative";
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0;
@@ -263,7 +270,7 @@ const styles = StyleSheet.create({
   backButton: {
     minWidth: 72,
     height: 44,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
     backgroundColor: quranColors.surface,
     borderColor: quranColors.border,
     justifyContent: "center",
@@ -280,7 +287,7 @@ const styles = StyleSheet.create({
     borderColor: quranColors.border,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
   },
   progressText: {
     fontSize: 14,
@@ -309,7 +316,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: quranColors.card,
     borderColor: quranColors.border,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
     paddingHorizontal: 24,
     paddingVertical: 76,
   },
@@ -318,7 +325,7 @@ const styles = StyleSheet.create({
     borderColor: quranColors.border,
     paddingHorizontal: 20,
     paddingVertical: 8,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
     marginBottom: 32,
   },
   surahBadgeText: {
@@ -373,7 +380,7 @@ const styles = StyleSheet.create({
   verseNumberBadge: {
     width: 44,
     height: 44,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
     backgroundColor: quranTint,
     justifyContent: "center",
     alignItems: "center",
@@ -406,7 +413,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     paddingHorizontal: 24,
     paddingVertical: 10,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
     borderWidth: 1,
     borderColor: quranColors.border,
   },

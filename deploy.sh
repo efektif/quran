@@ -8,9 +8,7 @@ export PATH
 unset CDPATH GIT_DIR GIT_WORK_TREE
 
 readonly REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
-readonly UI_ROOT="$(cd -- "$REPO_ROOT/../efektif-ui" && pwd -P)"
 readonly EXPECTED_REPO_ROOT="/home/ubuntu/efektif/efektif-quran"
-readonly EXPECTED_UI_ROOT="/home/ubuntu/efektif/efektif-ui"
 readonly WEB_ROOT="/var/www/quran.efektif.app"
 readonly SITE_URL="https://quran.efektif.app"
 readonly LOCK_FILE="$REPO_ROOT/.git/deploy.lock"
@@ -25,18 +23,14 @@ fail() {
   exit 1
 }
 
-for command in bun cp curl date diff find flock git python3 rsync stat sudo; do
+for command in bun curl date diff find flock git python3 rsync stat sudo; do
   command -v "$command" >/dev/null 2>&1 || fail "Required command not found: $command"
 done
 
 [[ "$WEB_ROOT" == "$EXPECTED_WEB_ROOT" ]] || fail "Refusing unexpected web root: $WEB_ROOT"
 [[ "$SITE_URL" == "https://quran.efektif.app" ]] || fail "Refusing unexpected site URL: $SITE_URL"
 [[ "$REPO_ROOT" == "$EXPECTED_REPO_ROOT" ]] || fail "Refusing unexpected repository path: $REPO_ROOT"
-[[ "$UI_ROOT" == "$EXPECTED_UI_ROOT" ]] || fail "Refusing unexpected Efektif UI path: $UI_ROOT"
 [[ -d "$REPO_ROOT/.git" ]] || fail "Not a Git repository: $REPO_ROOT"
-[[ -d "$UI_ROOT/.git" ]] || fail "Efektif UI is not a Git repository: $UI_ROOT"
-[[ -f "$UI_ROOT/packages/native/package.json" ]] || fail "Missing @efektif/native under $UI_ROOT"
-[[ -f "$UI_ROOT/packages/tokens/package.json" ]] || fail "Missing @efektif/tokens under $UI_ROOT"
 /usr/bin/sudo -n /usr/bin/true >/dev/null 2>&1 || fail "Passwordless sudo is required for /var/www deployment"
 [[ -d /var/www && ! -L /var/www && "$(stat -c '%U:%G' /var/www)" == "root:root" ]] || fail "/var/www must be a root-owned directory"
 [[ -d "$WEB_ROOT" && ! -L "$WEB_ROOT" ]] || fail "Web root must be an existing real directory"
@@ -57,42 +51,10 @@ deployed_commit="$(git rev-parse HEAD)"
 [[ "$deployed_commit" == "$(git rev-parse origin/main)" ]] || fail "Quran HEAD does not match origin/main"
 [[ -z "$(git status --porcelain)" ]] || fail "Quran repository became dirty after pull"
 
-if [[ -d "$UI_ROOT/.git" ]]; then
-  [[ "$(git -C "$UI_ROOT" branch --show-current)" == "main" ]] || fail "Efektif UI must be on main"
-  ui_origin="$(git -C "$UI_ROOT" remote get-url origin)"
-  [[ "$ui_origin" == "https://github.com/efektif/ui.git" || "$ui_origin" == "git@github.com:efektif/ui.git" ]] || fail "Unexpected Efektif UI origin: $ui_origin"
-  [[ -z "$(git -C "$UI_ROOT" status --porcelain)" ]] || fail "Efektif UI repository has uncommitted changes"
-  log "Checking Efektif UI dependency checkout"
-  git -C "$UI_ROOT" fetch origin --prune
-  read -r ui_ahead ui_behind < <(git -C "$UI_ROOT" rev-list --left-right --count HEAD...origin/main)
-  [[ "$ui_ahead" == "0" && "$ui_behind" == "0" ]] || fail "Efektif UI must match origin/main (ahead=$ui_ahead, behind=$ui_behind)"
-  ui_commit="$(git -C "$UI_ROOT" rev-parse HEAD)"
-fi
-
-log "Installing and building local Efektif UI packages"
-(
-  cd "$UI_ROOT"
-  bun install --frozen-lockfile --force
-  bun run tokens:build
-  bun run --filter @efektif/native build
-)
-[[ -z "$(git -C "$UI_ROOT" status --porcelain)" ]] || fail "Efektif UI build modified tracked files"
-[[ "$(git -C "$UI_ROOT" rev-parse HEAD)" == "$ui_commit" ]] || fail "Efektif UI HEAD changed during build"
-
 log "Installing Quran dependencies"
 [[ ! -e node_modules || (-d node_modules && ! -L node_modules) ]] || fail "node_modules must be a real directory"
 rm -rf -- node_modules
 bun install --frozen-lockfile
-
-# Bun file: dependencies can contain symlinks to the sibling repository. Metro
-# cannot reliably export those paths outside this project, so materialize the
-# two already-built packages as real directories for this deployment build.
-rm -rf -- node_modules/@efektif/native node_modules/@efektif/tokens
-mkdir -p node_modules/@efektif
-cp -a -- "$UI_ROOT/packages/native" node_modules/@efektif/native
-cp -a -- "$UI_ROOT/packages/tokens" node_modules/@efektif/tokens
-[[ -f node_modules/@efektif/native/dist/index.js ]] || fail "@efektif/native build output is missing"
-[[ -f node_modules/@efektif/tokens/dist/index.js ]] || fail "@efektif/tokens build output is missing"
 
 compgen -G '.env*.local' >/dev/null && fail "Local environment files are not allowed during deployment"
 rm -rf -- .expo dist test-results

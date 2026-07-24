@@ -1,14 +1,22 @@
 import { useCallback, useState, useMemo } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { StyleSheet, View, FlatList, Pressable, Linking } from 'react-native';
-import { Card, ListItem, Screen, Stack, Text } from '@efektif/native';
 
 import { AlKahfReminderModal } from '../components/AlKahfReminderModal';
 import { quranData } from '../data/quran';
+import {
+  Card,
+  ListItem,
+  quranColors,
+  quranTheme,
+  quranTint,
+  Screen,
+  Stack,
+  Text,
+} from '../design-system';
 import type { Surah } from '../types/quran';
 import { useAlKahfReminder } from '../hooks/useAlKahfReminder';
 import { useLastViewedAyat, type LastViewedAyat } from '../hooks/useLastViewedAyat';
-import { quranColors, quranNativeTheme, quranTint } from '../theme/efektifNative';
 import { AL_KAHF_SURAH_NUMBER } from '../utils/alKahfReminder';
 
 const ABOUT_URL = 'https://x.com/morizkay';
@@ -186,7 +194,7 @@ const styles = StyleSheet.create({
   headerButton: {
     borderWidth: 1,
     borderColor: quranColors.border,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
     backgroundColor: quranColors.surface,
     paddingHorizontal: 12,
     paddingVertical: 7,
@@ -210,14 +218,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: quranColors.card,
     borderColor: quranColors.border,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
     padding: 14,
     marginTop: 8,
   },
   surahNumber: {
     width: 36,
     height: 36,
-    borderRadius: quranNativeTheme.radii.sm,
+    borderRadius: quranTheme.radii.sm,
     backgroundColor: quranColors.surfaceMuted,
     justifyContent: 'center',
     alignItems: 'center',
@@ -253,7 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: quranColors.surface,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
     padding: 14,
     marginTop: 0,
     marginBottom: 4,
@@ -263,7 +271,7 @@ const styles = StyleSheet.create({
   resumeIcon: {
     minWidth: 56,
     height: 36,
-    borderRadius: quranNativeTheme.radii.md,
+    borderRadius: quranTheme.radii.md,
     backgroundColor: quranTint,
     justifyContent: 'center',
     alignItems: 'center',

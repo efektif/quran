@@ -1,7 +1,12 @@
 import { Modal, Pressable, StyleSheet, View } from "react-native";
-import { Button, Stack, Text } from "@efektif/native";
-
-import { quranColors, quranNativeTheme, quranTint } from "../theme/efektifNative";
+import {
+  Button,
+  quranColors,
+  quranTheme,
+  quranTint,
+  Stack,
+  Text,
+} from "../design-system";
 
 type AlKahfReminderModalProps = {
   visible: boolean;
@@ -70,7 +75,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: quranColors.background,
-    borderRadius: quranNativeTheme.radii.lg,
+    borderRadius: quranTheme.radii.lg,
     borderWidth: 1,
     borderColor: quranColors.border,
     padding: 20,
