@@ -104,6 +104,7 @@ bunx tsc --noEmit
 bun run test:unit
 bun run test:integration
 CI=1 bun run test:e2e
+rm -rf -- test-results
 [[ -z "$(git status --porcelain)" ]] || fail "Quality gates modified tracked or untracked files"
 [[ "$(git rev-parse HEAD)" == "$deployed_commit" ]] || fail "Quran HEAD changed during quality gates"
 
