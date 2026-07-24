@@ -11,6 +11,10 @@ This project follows Semantic Versioning for app-level releases.
 - In-app Changelog page linked from the Surah list header.
 - Kamis malam / Jumat Al-Kahf reminder modal with a direct open action.
 
+### Fixed
+
+- Surah list taps open the reader again (nested pressable was swallowing the press).
+
 ## [1.1.0] - 2026-07-21
 
 ### Added

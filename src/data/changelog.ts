@@ -10,6 +10,7 @@ export const CHANGELOG_RELEASES: ChangelogRelease[] = [
     items: [
       "Pengingat Surah Al-Kahf saat dibuka Kamis malam atau Jumat, dengan tombol langsung baca surah.",
       "Halaman Changelog in-app untuk melihat pembaruan produk.",
+      "Perbaikan tap daftar Surah yang tidak membuka reader.",
     ],
   },
   {
