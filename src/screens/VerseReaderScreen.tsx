@@ -1,13 +1,14 @@
-import { useCallback, useRef, useState, useMemo, useEffect } from "react";
+import { useCallback, useRef, useState, useMemo, useEffect, type ReactNode } from "react";
 import {
-  Dimensions,
   FlatList,
   Linking,
   Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
+  useWindowDimensions,
   View,
+  type LayoutChangeEvent,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
@@ -24,18 +25,124 @@ import {
 import type { Ayah, Surah } from "../types/quran";
 import { useLastViewedAyat } from "../hooks/useLastViewedAyat";
 
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
-const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0;
-const NAVBAR_HEIGHT = Platform.OS === "ios" ? 34 : 0;
-const CONTENT_HEIGHT = SCREEN_HEIGHT - STATUSBAR_HEIGHT - NAVBAR_HEIGHT;
-
 interface VerseItem {
   ayah: Ayah;
   surah: Surah;
 }
 
+function getPageHeight(windowHeight: number) {
+  const statusBarHeight = Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0;
+  const navbarHeight = Platform.OS === "ios" ? 34 : 0;
+  return windowHeight - statusBarHeight - navbarHeight;
+}
+
+function AyahBody({ ayah, surah }: { ayah: Ayah; surah: Surah }) {
+  return (
+    <Card style={styles.ayahContent}>
+      <Card style={styles.surahBadge}>
+        <Text variant="subtitle" style={styles.surahBadgeText}>
+          {surah.englishName}
+        </Text>
+      </Card>
+
+      <View style={styles.arabicContainer}>
+        <Text style={styles.arabicText}>{ayah.text}</Text>
+      </View>
+
+      <View style={styles.translationContainer}>
+        <Text style={styles.translationLabel}>Terjemahan Kemenag RI</Text>
+        <Text style={styles.translationText}>{ayah.translation}</Text>
+        {ayah.translationFootnotes ? (
+          <Text style={styles.translationFootnotes}>{ayah.translationFootnotes}</Text>
+        ) : null}
+      </View>
+
+      <View style={styles.verseIndicator}>
+        <View style={styles.verseNumberBadge}>
+          <Text style={styles.verseNumberText}>{ayah.numberInSurah}</Text>
+        </View>
+        <Text style={styles.verseMeta}>
+          Ayat {ayah.numberInSurah} dari {surah.numberOfAyahs}
+        </Text>
+      </View>
+
+      <View style={styles.metaInfo}>
+        <Text style={styles.metaText}>Juz {ayah.juz}</Text>
+        <Text style={styles.metaDivider}>/</Text>
+        <Text style={styles.metaText}>Halaman {ayah.page}</Text>
+      </View>
+
+      <Button
+        variant="outline"
+        size="sm"
+        style={styles.tafseerButton}
+        textStyle={styles.tafseerButtonText}
+        onPress={() => Linking.openURL(`https://quran.com/${surah.number}/${ayah.numberInSurah}`)}
+      >
+        Baca Tafseer
+      </Button>
+    </Card>
+  );
+}
+
+type AyahPageProps = {
+  item: VerseItem;
+  pageHeight: number;
+  pageWidth: number;
+};
+
+function AyahPage({ item, pageHeight, pageWidth }: AyahPageProps) {
+  const { ayah, surah } = item;
+  const [contentHeight, setContentHeight] = useState(0);
+  // Prefer a plain View when the ayah fits. A disabled ScrollView on web sets
+  // touch-action:none and still steals mobile swipes from the outer pager.
+  const needsScroll = contentHeight > pageHeight + 1;
+
+  const handleMeasure = useCallback((event: LayoutChangeEvent) => {
+    setContentHeight(event.nativeEvent.layout.height);
+  }, []);
+
+  let pageContent: ReactNode;
+  if (needsScroll) {
+    pageContent = (
+      <ScrollView
+        style={styles.ayahScroll}
+        contentContainerStyle={styles.ayahScrollContent}
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
+      >
+        <AyahBody ayah={ayah} surah={surah} />
+      </ScrollView>
+    );
+  } else {
+    pageContent = (
+      <View style={[styles.ayahScroll, styles.ayahScrollContent]}>
+        <AyahBody ayah={ayah} surah={surah} />
+      </View>
+    );
+  }
+
+  return (
+    <View style={[styles.ayahContainer, { height: pageHeight, width: pageWidth }]}>
+      <View
+        pointerEvents="none"
+        style={styles.measureLayer}
+        onLayout={handleMeasure}
+        accessible={false}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        <AyahBody ayah={ayah} surah={surah} />
+      </View>
+      {pageContent}
+    </View>
+  );
+}
+
 export default function VerseReaderScreen() {
   const router = useRouter();
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+  const pageHeight = getPageHeight(windowHeight);
   const params = useLocalSearchParams<{
     surahNumber?: string | string[];
     startAyah?: string | string[];
@@ -45,7 +152,7 @@ export default function VerseReaderScreen() {
   const surahNumber = Number(surahValue);
   const parsedStartAyah = Number(startAyahValue ?? 1);
   const startAyah = Number.isInteger(parsedStartAyah) && parsedStartAyah > 0 ? parsedStartAyah : 1;
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<FlatList<VerseItem>>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { saveLastViewed } = useLastViewedAyat();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -65,13 +172,11 @@ export default function VerseReaderScreen() {
     return Math.max(0, startAyah - 1);
   }, [startAyah]);
 
-  // Save position on unmount
   useEffect(() => {
     return () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-      // Save current position when leaving
       saveLastViewed(currentAyahRef.current.surahNumber, currentAyahRef.current.ayahNumber);
     };
   }, [saveLastViewed]);
@@ -82,11 +187,9 @@ export default function VerseReaderScreen() {
         const newIndex = viewableItems[0].index;
         setCurrentIndex(newIndex);
 
-        // Track current ayah for unmount save
         const ayahNumber = newIndex + 1;
         currentAyahRef.current = { surahNumber, ayahNumber };
 
-        // Debounced save to storage
         if (debounceRef.current) {
           clearTimeout(debounceRef.current);
         }
@@ -109,72 +212,12 @@ export default function VerseReaderScreen() {
     router.back();
   }, [router]);
 
-  const renderAyahItem = useCallback(({ item }: { item: VerseItem }) => {
-    const { ayah, surah: currentSurah } = item;
-
-    return (
-      <View style={styles.ayahContainer}>
-        <ScrollView
-          style={styles.ayahScroll}
-          contentContainerStyle={styles.ayahScrollContent}
-          nestedScrollEnabled
-          showsVerticalScrollIndicator={false}
-        >
-          <Card style={styles.ayahContent}>
-            {/* Surah info at top */}
-            <Card style={styles.surahBadge}>
-              <Text variant="subtitle" style={styles.surahBadgeText}>
-                {currentSurah.englishName}
-              </Text>
-            </Card>
-
-            {/* Arabic verse - centered */}
-            <View style={styles.arabicContainer}>
-              <Text style={styles.arabicText}>{ayah.text}</Text>
-            </View>
-
-            <View style={styles.translationContainer}>
-              <Text style={styles.translationLabel}>Terjemahan Kemenag RI</Text>
-              <Text style={styles.translationText}>{ayah.translation}</Text>
-              {ayah.translationFootnotes ? (
-                <Text style={styles.translationFootnotes}>{ayah.translationFootnotes}</Text>
-              ) : null}
-            </View>
-
-            {/* Verse number indicator */}
-            <View style={styles.verseIndicator}>
-              <View style={styles.verseNumberBadge}>
-                <Text style={styles.verseNumberText}>{ayah.numberInSurah}</Text>
-              </View>
-              <Text style={styles.verseMeta}>
-                Ayat {ayah.numberInSurah} dari {currentSurah.numberOfAyahs}
-              </Text>
-            </View>
-
-            {/* Juz and Page info */}
-            <View style={styles.metaInfo}>
-              <Text style={styles.metaText}>Juz {ayah.juz}</Text>
-              <Text style={styles.metaDivider}>/</Text>
-              <Text style={styles.metaText}>Halaman {ayah.page}</Text>
-            </View>
-
-            {/* Tafseer link */}
-            <Button
-              variant="outline"
-              size="sm"
-              style={styles.tafseerButton}
-              textStyle={styles.tafseerButtonText}
-              onPress={() =>
-                Linking.openURL(`https://quran.com/${currentSurah.number}/${ayah.numberInSurah}`)
-              }
-            >
-              Baca Tafseer
-            </Button>
-          </Card>
-        </ScrollView>
-      </View>
-    );
-  }, []);
+  const renderAyahItem = useCallback(
+    ({ item }: { item: VerseItem }) => (
+      <AyahPage item={item} pageHeight={pageHeight} pageWidth={windowWidth} />
+    ),
+    [pageHeight, windowWidth],
+  );
 
   const keyExtractor = useCallback(
     (item: VerseItem) => `${item.surah.number}-${item.ayah.numberInSurah}`,
@@ -182,12 +225,12 @@ export default function VerseReaderScreen() {
   );
 
   const getItemLayout = useCallback(
-    (_: unknown, index: number) => ({
-      length: CONTENT_HEIGHT,
-      offset: CONTENT_HEIGHT * index,
+    (_: ArrayLike<VerseItem> | null | undefined, index: number) => ({
+      length: pageHeight,
+      offset: pageHeight * index,
       index,
     }),
-    [],
+    [pageHeight],
   );
 
   if (!surah) {
@@ -202,7 +245,6 @@ export default function VerseReaderScreen() {
     <Screen style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={quranColors.background} />
 
-      {/* Back button overlay */}
       <View style={styles.headerOverlay}>
         <Button
           variant="secondary"
@@ -221,16 +263,16 @@ export default function VerseReaderScreen() {
         </Card>
       </View>
 
-      {/* TikTok-style vertical scroll */}
       <FlatList
         ref={flatListRef}
+        testID="verse-list"
         data={verses}
         renderItem={renderAyahItem}
         keyExtractor={keyExtractor}
         pagingEnabled
         nestedScrollEnabled
         showsVerticalScrollIndicator={false}
-        snapToInterval={CONTENT_HEIGHT}
+        snapToInterval={pageHeight}
         snapToAlignment="start"
         decelerationRate="fast"
         getItemLayout={getItemLayout}
@@ -242,7 +284,6 @@ export default function VerseReaderScreen() {
         windowSize={5}
       />
 
-      {/* Swipe hint */}
       <View style={styles.swipeHint} pointerEvents="none">
         <Text style={styles.swipeHintText}>Swipe untuk ayat selanjutnya</Text>
       </View>
@@ -295,11 +336,17 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   ayahContainer: {
-    height: CONTENT_HEIGHT,
-    width: SCREEN_WIDTH,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 16,
+    overflow: "hidden",
+  },
+  measureLayer: {
+    position: "absolute",
+    left: 16,
+    right: 16,
+    top: 0,
+    opacity: 0,
   },
   ayahScroll: {
     flex: 1,
@@ -310,7 +357,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   ayahContent: {
-    minHeight: CONTENT_HEIGHT - 16,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
@@ -334,7 +380,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   arabicContainer: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
