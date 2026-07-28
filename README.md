@@ -27,12 +27,12 @@ per-ayah tafseer is an explicit external link to
 ## Development
 
 ```sh
-bun install --offline
-bun run start
+pnpm install --offline --frozen-lockfile
+pnpm start
 ```
 
-Use `bun run web`, `bun run ios`, or `bun run android` for a specific platform.
-Translation regeneration (`bun run data:sync:translations`) is a networked,
+Use `pnpm web`, `pnpm ios`, or `pnpm android` for a specific platform.
+Translation regeneration (`pnpm data:sync:translations`) is a networked,
 data-changing maintenance task and is not part of installation or builds.
 
 ## Verification
@@ -40,15 +40,15 @@ data-changing maintenance task and is not part of installation or builds.
 Run the standalone non-browser gates:
 
 ```sh
-bun install --offline
-bun run lint
-bun run test:unit
-bun run test:integration
-bunx tsc --noEmit
-bun run build
+pnpm install --offline --frozen-lockfile
+pnpm lint
+pnpm test:unit
+pnpm test:integration
+pnpm exec tsc --noEmit
+pnpm build
 ```
 
-`bun run test:e2e` is the separate Playwright browser lane. It requires a
+`pnpm test:e2e` is the separate Playwright browser lane. It requires a
 supported browser environment and is not run as part of design-system
 localization verification.
 

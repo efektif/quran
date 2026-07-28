@@ -1,22 +1,22 @@
 .PHONY: install dev build deploy web android ios
 
 install:
-	bun install
+	pnpm install
 
 dev:
-	bun run start
+	pnpm start
 
 build:
-	bun run build
+	pnpm build
 
 deploy:
-	bun run deploy
+	pnpm deploy
 
 web:
-	bun run web
+	pnpm web
 
 android:
-	bun run android
+	pnpm android
 
 ios:
-	bun run ios
+	pnpm ios

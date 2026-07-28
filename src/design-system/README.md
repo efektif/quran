@@ -5,9 +5,9 @@ does not install or load `@efektif/native` or `@efektif/tokens` at runtime.
 
 ## Provenance
 
-- Design contract: **Efektif Design Contract 0.2.0**
+- Design contract: **Efektif Design Contract 0.3.0**
 - Source repository: `efektif/ui`
-- Source commit: `e7363e347233eeab5c030a7fc8f0ba0c316a00d4`
+- Source commit: `b5f4cd88ccd74b3a49b6ece5d03d1b20f12a8842`
 - License: [MIT](./LICENSE)
 - Token sources:
   - `packages/tokens/src/index.ts`
@@ -42,27 +42,27 @@ APIs for components that Quran does not use are intentionally not copied.
 Quran intentionally ships one static combination:
 
 - mode: `light`
-- density: `dense`
+- density: `dense` semantics with touch-safe 44–52px controls
 - tint: `default` (`#2563EB`)
 
 The product already declares light UI in `app.json`, and no screen exposes a
 mode, density, or tint switch. Supporting unused modes would make this snapshot
 larger without changing product behavior.
 
-`quranColors` retains the app's explicit light-surface overrides, including its
-stronger `#4B4B4B` muted text, while primitives consume the contract's base
-light theme through `QuranThemeProvider`.
+`quranColors` retains the app's explicit reading-focused light surface while
+primitives consume the contract's base light theme through
+`QuranThemeProvider`.
 
 ## Verification
 
 After changing this snapshot, run:
 
-1. `bun install --offline`
-2. `bun run lint`
-3. `bun run test:unit`
-4. `bun run test:integration`
-5. `bunx tsc --noEmit`
-6. `bun run build`
+1. `pnpm install --offline --frozen-lockfile`
+2. `pnpm lint`
+3. `pnpm test:unit`
+4. `pnpm test:integration`
+5. `pnpm exec tsc --noEmit`
+6. `pnpm build`
 
 Browser end-to-end tests are a separate lane and are not part of static design
 localization verification.
@@ -73,6 +73,6 @@ localization verification.
 2. Copy only tokens, primitives, and behavior required by Quran.
 3. Update the contract version, full source commit, paths, and license if
    necessary.
-4. Confirm `package.json`, `bun.lock`, and `deploy.sh` contain no sibling
+4. Confirm `package.json`, `pnpm-lock.yaml`, and `deploy.sh` contain no sibling
    repository or file dependency.
 5. Run the verification lanes above.

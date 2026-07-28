@@ -47,7 +47,7 @@ const surahs = quranData.surahs.map((surah, surahIndex) => {
   };
 });
 
-const generated = `// Auto-generated Quran data with tashkeel (diacritical marks)\n// Arabic source: quran-uthmani edition from api.alquran.cloud\n// Translation: Kementerian Agama Republik Indonesia via QuranEnc (${TRANSLATION_KEY} v${TRANSLATION_VERSION})\n// Regenerate with: bun run data:sync:translations\n\nimport type { QuranData } from '../types/quran';\n\nexport const quranData: QuranData = ${JSON.stringify({ surahs }, null, 2)};\n`;
+const generated = `// Auto-generated Quran data with tashkeel (diacritical marks)\n// Arabic source: quran-uthmani edition from api.alquran.cloud\n// Translation: Kementerian Agama Republik Indonesia via QuranEnc (${TRANSLATION_KEY} v${TRANSLATION_VERSION})\n// Regenerate with: pnpm data:sync:translations\n\nimport type { QuranData } from '../types/quran';\n\nexport const quranData: QuranData = ${JSON.stringify({ surahs }, null, 2)};\n`;
 await writeFile(OUTPUT_PATH, generated);
 console.log(`Synced ${translatedAyahCount} Indonesian ayah translations.`);
 

@@ -1,7 +1,7 @@
 // Auto-generated Quran data with tashkeel (diacritical marks)
 // Arabic source: quran-uthmani edition from api.alquran.cloud
 // Translation: Kementerian Agama Republik Indonesia via QuranEnc (indonesian_affairs v1.0.1)
-// Regenerate with: bun run data:sync:translations
+// Regenerate with: pnpm data:sync:translations
 
 import type { QuranData } from "../types/quran";
 

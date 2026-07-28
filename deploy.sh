@@ -23,7 +23,7 @@ fail() {
   exit 1
 }
 
-for command in bun curl date diff find flock git python3 rsync stat sudo; do
+for command in pnpm curl date diff find flock git python3 rsync stat sudo; do
   command -v "$command" >/dev/null 2>&1 || fail "Required command not found: $command"
 done
 
@@ -54,25 +54,25 @@ deployed_commit="$(git rev-parse HEAD)"
 log "Installing Quran dependencies"
 [[ ! -e node_modules || (-d node_modules && ! -L node_modules) ]] || fail "node_modules must be a real directory"
 rm -rf -- node_modules
-bun install --frozen-lockfile
+pnpm install --frozen-lockfile
 
 compgen -G '.env*.local' >/dev/null && fail "Local environment files are not allowed during deployment"
 rm -rf -- .expo dist test-results
 rm -f -- expo-env.d.ts
 
 log "Running quality gates"
-bun run lint
-bunx tsc --noEmit
-bun run test:unit
-bun run test:integration
-CI=1 bun run test:e2e
+pnpm lint
+pnpm exec tsc --noEmit
+pnpm test:unit
+pnpm test:integration
+CI=1 pnpm test:e2e
 rm -rf -- test-results
 [[ -z "$(git status --porcelain)" ]] || fail "Quality gates modified tracked or untracked files"
 [[ "$(git rev-parse HEAD)" == "$deployed_commit" ]] || fail "Quran HEAD changed during quality gates"
 
 log "Building static Expo export"
 rm -rf -- dist
-bun run build
+pnpm build
 [[ -z "$(git status --porcelain)" ]] || fail "Build modified tracked or untracked files"
 [[ "$(git rev-parse HEAD)" == "$deployed_commit" ]] || fail "Quran HEAD changed during build"
 for required in dist/index.html dist/reader.html dist/changelog.html; do

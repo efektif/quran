@@ -1,6 +1,8 @@
+import { writeFile } from "node:fs/promises";
+
 /**
  * Script to fetch Quran data from alquran.cloud API
- * Run with: bun scripts/fetch-quran-data.ts
+ * Run with: pnpm exec tsx scripts/fetch-quran-data.ts
  */
 
 interface ApiAyah {
@@ -85,7 +87,7 @@ export const quranData: QuranData = ${JSON.stringify({ surahs }, null, 2)};
 export default quranData;
 `;
 
-  await Bun.write('src/data/quran.ts', output);
+  await writeFile("src/data/quran.ts", output);
   
   console.log(`Successfully generated src/data/quran.ts`);
   console.log(`Total surahs: ${surahs.length}`);

@@ -1,8 +1,8 @@
-import { describe, expect, mock, test } from "bun:test";
+import { describe, expect, vi, test } from "vitest";
 
 const values = new Map<string, string>();
-mock.module("react-native", () => ({ Platform: { OS: "web" } }));
-mock.module("expo-secure-store", () => ({}));
+vi.doMock("react-native", () => ({ Platform: { OS: "web" } }));
+vi.doMock("expo-secure-store", () => ({}));
 Object.defineProperty(globalThis, "window", {
   configurable: true,
   value: {

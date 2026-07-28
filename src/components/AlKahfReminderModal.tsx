@@ -69,7 +69,7 @@ export function AlKahfReminderModal({
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: "rgba(10, 10, 10, 0.45)",
+    backgroundColor: "rgba(9, 11, 15, 0.58)",
     justifyContent: "center",
     paddingHorizontal: 24,
   },
@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
     color: quranColors.foreground,
   },
   body: {
-    fontSize: 14,
-    lineHeight: 21,
+    fontSize: 16,
+    lineHeight: 24,
     color: quranColors.mutedForeground,
   },
   actions: {
