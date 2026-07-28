@@ -296,7 +296,7 @@ export const Card = memo(function Card({
   );
 });
 
-export type TextVariant = "body" | "title" | "subtitle" | "muted" | "mono" | "caption" | "label";
+type TextVariant = "body" | "title" | "subtitle" | "muted" | "mono" | "caption" | "label";
 
 export interface TextProps extends RNTextProps {
   children: ReactNode;
@@ -352,81 +352,6 @@ export const Text = memo(function Text({ children, style, variant = "body", ...p
     >
       {children}
     </RNText>
-  );
-});
-
-export interface BadgeProps extends ViewProps {
-  children: ReactNode;
-  tone?: "default" | "muted" | "success" | "warning" | "danger" | "info";
-}
-
-const getBadgeToneStyle = (theme: QuranTheme, tone: NonNullable<BadgeProps["tone"]>) => {
-  const tones: Record<NonNullable<BadgeProps["tone"]>, { root: ViewStyle; color: string }> = {
-    default: {
-      root: {
-        backgroundColor: theme.colors.surface,
-        borderColor: theme.colors.border,
-      },
-      color: theme.colors.foreground,
-    },
-    muted: {
-      root: {
-        backgroundColor: theme.colors.muted,
-        borderColor: theme.colors.border,
-      },
-      color: theme.colors.mutedForeground,
-    },
-    success: {
-      root: {
-        backgroundColor: theme.status.success.background,
-        borderColor: theme.status.success.border,
-      },
-      color: theme.status.success.color,
-    },
-    warning: {
-      root: {
-        backgroundColor: theme.status.warning.background,
-        borderColor: theme.status.warning.border,
-      },
-      color: theme.status.warning.color,
-    },
-    danger: {
-      root: {
-        backgroundColor: theme.status.danger.background,
-        borderColor: theme.status.danger.border,
-      },
-      color: theme.status.danger.color,
-    },
-    info: {
-      root: {
-        backgroundColor: theme.status.info.background,
-        borderColor: theme.status.info.border,
-      },
-      color: theme.status.info.color,
-    },
-  };
-
-  return tones[tone];
-};
-
-export const Badge = memo(function Badge({
-  children,
-  style,
-  tone = "default",
-  ...props
-}: BadgeProps) {
-  const theme = useQuranTheme();
-  const toneStyle = getBadgeToneStyle(theme, tone);
-
-  return (
-    <View
-      style={[styles.badge, toneStyle.root, { borderRadius: theme.radii.full }, style]}
-      {...props}
-    >
-      <Text variant="label" style={[styles.badgeLabel, { color: toneStyle.color }]}>
-        {children}
-      </Text>
-    </View>
   );
 });
 
@@ -523,15 +448,6 @@ const styles = StyleSheet.create({
   },
   text: {
     letterSpacing: 0,
-  },
-  badge: {
-    alignSelf: "flex-start",
-    borderWidth: 1,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-  },
-  badgeLabel: {
-    fontSize: 12,
   },
   screen: {
     flex: 1,

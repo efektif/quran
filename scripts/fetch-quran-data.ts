@@ -2,7 +2,7 @@ import { writeFile } from "node:fs/promises";
 
 /**
  * Script to fetch Quran data from alquran.cloud API
- * Run with: pnpm exec tsx scripts/fetch-quran-data.ts
+ * Run with: pnpm data:fetch:quran
  */
 
 interface ApiAyah {
@@ -45,11 +45,11 @@ interface ApiResponse {
 }
 
 async function fetchQuranData() {
-  console.log('Fetching Quran data with tashkeel (quran-uthmani)...');
-  
-  const response = await fetch('https://api.alquran.cloud/v1/quran/quran-uthmani');
+  console.log("Fetching Quran data with tashkeel (quran-uthmani)...");
+
+  const response = await fetch("https://api.alquran.cloud/v1/quran/quran-uthmani");
   const json: ApiResponse = await response.json();
-  
+
   if (json.code !== 200) {
     throw new Error(`API error: ${json.status}`);
   }
@@ -63,14 +63,14 @@ async function fetchQuranData() {
       page: ayah.page,
       hizbQuarter: ayah.hizbQuarter,
     }));
-    
+
     return {
       number: surah.number,
       name: surah.name,
       englishName: surah.englishName,
       englishNameTranslation: surah.englishNameTranslation,
       numberOfAyahs: ayahs.length, // Calculate from array since API doesn't include it
-      revelationType: surah.revelationType as 'Meccan' | 'Medinan',
+      revelationType: surah.revelationType as "Meccan" | "Medinan",
       ayahs,
     };
   });
@@ -88,7 +88,7 @@ export default quranData;
 `;
 
   await writeFile("src/data/quran.ts", output);
-  
+
   console.log(`Successfully generated src/data/quran.ts`);
   console.log(`Total surahs: ${surahs.length}`);
   console.log(`Total ayahs: ${surahs.reduce((acc, s) => acc + s.ayahs.length, 0)}`);
