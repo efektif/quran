@@ -19,19 +19,7 @@ export function SearchOverlay() {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const openOverlay = useCallback(() => {
-    setOpen(true);
-    if (!indexCache) {
-      setLoading(true);
-      fetch("/data/search-index.json")
-        .then((res) => res.json())
-        .then((data: SearchIndexEntry[]) => {
-          indexCache = data;
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
-    }
-  }, []);
+  const openOverlay = useCallback(() => setOpen(true), []);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -58,20 +46,33 @@ export function SearchOverlay() {
   }, [openOverlay]);
 
   useEffect(() => {
-    if (open) {
-      setQuery("");
-      setResults([]);
-      setActiveIndex(0);
-      requestAnimationFrame(() => inputRef.current?.focus());
+    if (!open) return;
+    setQuery("");
+    setResults([]);
+    setActiveIndex(0);
+    requestAnimationFrame(() => inputRef.current?.focus());
+    // Every open path (Ctrl+K, "/", header button) lands here, so the lazy
+    // index fetch lives in this effect rather than in one trigger.
+    if (!indexCache) {
+      setLoading(true);
+      fetch("/data/search-index.json")
+        .then((res) => res.json())
+        .then((data: SearchIndexEntry[]) => {
+          indexCache = data;
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
     }
   }, [open]);
 
+  // Depends on `loading` too: the query can arrive while the index fetch is
+  // still in flight, and only the loading flip makes the index available.
   useEffect(() => {
     if (!indexCache) return;
     const next = filterSearchIndex(indexCache, query);
     setResults(next);
     setActiveIndex(0);
-  }, [query]);
+  }, [query, loading]);
 
   const goTo = useCallback(
     (result: SearchResult) => {
@@ -104,7 +105,7 @@ export function SearchOverlay() {
       onClick={() => setOpen(false)}
     >
       <div
-        className="w-full max-w-xl overflow-hidden rounded-xl border border-border bg-base"
+        className="w-full max-w-xl overflow-hidden rounded-sm border-2 border-border bg-base"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-center gap-2 border-b border-border px-4">

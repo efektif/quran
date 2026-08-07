@@ -153,12 +153,14 @@ async function main() {
         const text = stripBismillahPrefix(surah.number, ayah.numberInSurah, ayah.text, bismillah);
         totalAyahs += 1;
 
+        // id/en are pre-lowercased: the client filters this index on every
+        // keystroke, so the normalization cost is paid here once.
         searchIndex.push({
           s: surah.number,
           a: ayah.numberInSurah,
           ar: normalizeArabic(text),
-          id: translated.translation,
-          en: english.ayahs[ayahIndex].text,
+          id: translated.translation.toLowerCase(),
+          en: english.ayahs[ayahIndex].text.toLowerCase(),
         });
 
         if (ayah.juz > lastSeenJuz) {

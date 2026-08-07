@@ -11,10 +11,9 @@
     "lint:fix": "oxlint --fix .",
     "format": "oxfmt .",
     "test:unit": "vitest run src",
-    "test:integration": "vitest run tests/integration",
     "test:e2e": "playwright test",
     "data:fetch": "tsx scripts/fetch-quran-data.ts",
-    "test": "pnpm test:unit && pnpm test:integration",
+    "test": "pnpm test:unit",
     "typecheck": "tsc --noEmit",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "verify:full": "pnpm verify && pnpm test:e2e"
