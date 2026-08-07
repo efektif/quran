@@ -66,8 +66,8 @@ export const STORE_STORAGE_KEY = "quran-store";
 export const useQuranStore = create<QuranState>()(
   persist(
     (set, get) => ({
-      // System One: dark is the default profile.
-      theme: "dark",
+      // Classic mushaf look: light paper is the default profile.
+      theme: "light",
       setTheme: (theme) => set({ theme }),
 
       translationMode: "id",

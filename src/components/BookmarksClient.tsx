@@ -36,17 +36,17 @@ export function BookmarksClient() {
 
   return (
     <div className="py-6">
-      <h1 className="text-2xl font-bold text-text">Bookmark</h1>
+      <h1 className="font-display text-2xl font-bold text-text">Bookmark</h1>
       <p className="mt-1 text-sm text-muted">Ayat yang kamu simpan, dikelompokkan per surah.</p>
 
       {groups.length === 0 ? (
-        <div className="mt-8 rounded-lg border border-border bg-base p-8 text-center">
+        <div className="mt-8 rounded-sm border border-border bg-base p-8 text-center">
           <p className="text-sm text-muted">
             Belum ada bookmark. Buka surah lalu tekan tombol Bookmark pada ayat mana pun.
           </p>
           <Link
             href="/"
-            className="motion-fade mt-4 inline-block rounded-md bg-primary px-4 py-2 text-sm font-bold text-on-primary"
+            className="motion-fade mt-4 inline-block rounded-sm bg-primary px-4 py-2 text-sm font-bold text-on-primary"
           >
             Mulai membaca
           </Link>
@@ -56,7 +56,7 @@ export function BookmarksClient() {
           {groups.map((group) => (
             <section key={group.meta.number} aria-label={group.meta.englishName}>
               <div className="mb-2 flex items-baseline justify-between">
-                <h2 className="text-base font-bold text-text">
+                <h2 className="font-display text-base font-bold text-text">
                   {group.meta.number}. {group.meta.englishName}
                 </h2>
                 <span className="font-arabic text-lg text-primary">{group.meta.name}</span>
@@ -67,7 +67,7 @@ export function BookmarksClient() {
                     <Link
                       href={`/surah/${group.meta.number}/?ayat=${ayah}`}
                       aria-label={`Buka ${group.meta.englishName} ayat ${ayah}`}
-                      className="motion-fade flex flex-1 items-center justify-between rounded-lg border border-border bg-base px-4 py-3 hover:border-primary"
+                      className="motion-fade flex flex-1 items-center justify-between rounded-sm border border-border bg-base px-4 py-3 hover:border-primary"
                     >
                       <span className="text-sm font-medium text-text">Ayat {ayah}</span>
                       <span className="text-xs text-muted">{group.meta.englishName}</span>
@@ -76,7 +76,7 @@ export function BookmarksClient() {
                       type="button"
                       onClick={() => toggleBookmark(group.meta.number, ayah)}
                       aria-label={`Hapus bookmark ${group.meta.englishName} ayat ${ayah}`}
-                      className="motion-fade rounded-md border border-border px-3 py-3 text-xs font-semibold text-muted hover:text-text"
+                      className="motion-fade rounded-sm border border-border px-3 py-3 text-xs font-semibold text-muted hover:text-text"
                     >
                       Hapus
                     </button>

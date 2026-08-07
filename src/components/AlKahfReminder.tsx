@@ -37,13 +37,11 @@ export function AlKahfReminder() {
       onClick={dismiss}
     >
       <div
-        className="w-full max-w-md rounded-xl border border-border bg-base p-5"
+        className="w-full max-w-md rounded-sm border-[3px] border-double border-gold/70 bg-base p-5"
         onClick={(event) => event.stopPropagation()}
       >
-        <p className="text-xs font-bold tracking-wide text-primary uppercase">
-          Malam Jumat / Jumat
-        </p>
-        <h2 id="alkahf-title" className="mt-2 text-xl font-bold text-text">
+        <p className="label-caps text-primary">Malam Jumat / Jumat</p>
+        <h2 id="alkahf-title" className="mt-2 font-display text-xl font-bold text-text">
           Baca Surah Al-Kahf
         </h2>
         <p className="mt-2 text-sm leading-6 text-muted">
@@ -58,7 +56,7 @@ export function AlKahfReminder() {
               dismiss();
               router.push(`/surah/${AL_KAHF_SURAH_NUMBER}/`);
             }}
-            className="motion-fade h-11 rounded-md bg-primary text-sm font-bold text-on-primary hover:opacity-90"
+            className="motion-fade h-11 rounded-sm bg-primary text-sm font-bold text-on-primary hover:opacity-90"
           >
             Baca Al-Kahf
           </button>
@@ -66,7 +64,7 @@ export function AlKahfReminder() {
             type="button"
             aria-label="Tutup pengingat"
             onClick={dismiss}
-            className="motion-fade h-11 rounded-md border border-border text-sm font-semibold text-muted hover:text-text"
+            className="motion-fade h-11 rounded-sm border border-border text-sm font-semibold text-muted hover:text-text"
           >
             Nanti saja
           </button>

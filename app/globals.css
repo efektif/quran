@@ -3,39 +3,40 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * System One tokens. Dark is the default (no .dark class needed); the light
- * theme activates via [data-theme="light"] on <html>. Both profiles share the
- * same variable names so components never branch on theme.
+ * Classic mushaf theme (user-requested departure from System One — see
+ * AGENTS.md). Light paper is the default; the "dark" profile is a sepia
+ * night-reading variant activated via [data-theme="dark"] on <html>.
  */
-:root,
-.dark {
-  --canvas: #090b0f;
-  --base: #0d1015;
-  --surface: #141a24;
-  --surface-muted: #1a2130;
-  --border: #232b3a;
-  --text: #f2f4f8;
-  --text-muted: #8b93a7;
-  --primary: #6e7bff;
-  --on-primary: #ffffff;
-  --primary-soft: rgba(110, 123, 255, 0.14);
-  --arabic: #f6f1e7;
-  color-scheme: dark;
+:root {
+  --canvas: #efe7d1;
+  --base: #fbf6e9;
+  --surface: #f2ebd6;
+  --surface-muted: #e9dfc4;
+  --border: #d5c69e;
+  --text: #2e2415;
+  --text-muted: #7c6b4d;
+  --primary: #1f5c3d;
+  --on-primary: #fbf6e9;
+  --primary-soft: #e4e9d2;
+  --arabic: #25291d;
+  --gold: #9a7b2d;
+  color-scheme: light;
 }
 
-[data-theme="light"] {
-  --canvas: #f7f8fc;
-  --base: #ffffff;
-  --surface: #f0f3fa;
-  --surface-muted: #e5eaff;
-  --border: #d7dce8;
-  --text: #111318;
-  --text-muted: #687386;
-  --primary: #2563eb;
-  --on-primary: #ffffff;
-  --primary-soft: rgba(37, 99, 235, 0.1);
-  --arabic: #1a2332;
-  color-scheme: light;
+[data-theme="dark"] {
+  --canvas: #1d1811;
+  --base: #262019;
+  --surface: #2f2719;
+  --surface-muted: #3a3020;
+  --border: #4a3f2a;
+  --text: #efe6d2;
+  --text-muted: #a39377;
+  --primary: #8fbf9f;
+  --on-primary: #1c1610;
+  --primary-soft: rgba(143, 191, 159, 0.14);
+  --arabic: #f5ebd4;
+  --gold: #c9a95c;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -50,7 +51,9 @@
   --color-on-primary: var(--on-primary);
   --color-primary-soft: var(--primary-soft);
   --color-arabic: var(--arabic);
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-gold: var(--gold);
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: Georgia, "Times New Roman", serif;
   --font-arabic: "Amiri Quran", "Scheherazade New", "Traditional Arabic", serif;
 }
 
@@ -65,14 +68,27 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* System One motion: 100-140ms feedback, honor reduced motion. */
+/* Classic apps had restrained chrome: 3px radius, no decorative shadows. */
+.rounded-app {
+  border-radius: 3px;
+}
+
+/* Small caps section labels, in the style of old reference books. */
+.label-caps {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .motion-fade {
     transition:
       opacity 120ms ease,
-      transform 120ms ease,
       background-color 120ms ease,
-      border-color 120ms ease;
+      border-color 120ms ease,
+      color 120ms ease;
   }
 }
 

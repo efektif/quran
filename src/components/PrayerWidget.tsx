@@ -44,9 +44,9 @@ export function PrayerWidget() {
     return (
       <Link
         href="/sholat/"
-        className="motion-fade mb-4 flex items-center justify-between rounded-lg border border-border bg-base p-4 hover:border-primary"
+        className="motion-fade mb-4 flex items-center justify-between rounded-sm border border-border bg-base p-4 hover:border-gold"
       >
-        <span className="text-sm font-semibold text-text">Jadwal Sholat</span>
+        <span className="font-display text-sm font-bold text-text">Jadwal Sholat</span>
         <span className="text-xs text-muted">Atur lokasi →</span>
       </Link>
     );
@@ -60,17 +60,15 @@ export function PrayerWidget() {
           ? `Buka jadwal sholat. ${PRAYER_LABELS[next.key]} ${formatTimeInZone(next.at, location.timezone)}`
           : "Buka jadwal sholat"
       }
-      className="motion-fade mb-4 flex items-center justify-between gap-3 rounded-lg border border-border bg-base p-4 hover:border-primary"
+      className="motion-fade mb-4 flex items-center justify-between gap-3 rounded-sm border border-border bg-base p-4 hover:border-gold"
     >
       <div className="min-w-0">
-        <p className="text-[11px] font-bold tracking-wide text-muted uppercase">
-          {next ? `Menuju ${PRAYER_LABELS[next.key]}` : "Jadwal Sholat"}
-        </p>
+        <p className="label-caps">{next ? `Menuju ${PRAYER_LABELS[next.key]}` : "Jadwal Sholat"}</p>
         <p className="truncate text-xs text-muted">{location.label}</p>
       </div>
       {next ? (
         <div className="text-right">
-          <p className="text-lg font-bold text-primary tabular-nums">
+          <p className="font-display text-lg font-bold text-primary tabular-nums">
             {formatTimeInZone(next.at, location.timezone)}
           </p>
           <p className="text-xs text-muted tabular-nums" suppressHydrationWarning>

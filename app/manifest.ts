@@ -10,8 +10,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Baca Al-Quran dengan terjemahan Kemenag RI dan English, audio per ayat, bookmark, dan jadwal sholat.",
     start_url: "/",
     display: "standalone",
-    background_color: "#090b0f",
-    theme_color: "#6e7bff",
+    background_color: "#efe7d1",
+    theme_color: "#1f5c3d",
     lang: "id",
     icons: [
       { src: "/icons/favicon-48.png", sizes: "48x48", type: "image/png" },

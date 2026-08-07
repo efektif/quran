@@ -46,7 +46,7 @@ export default async function JuzPage({ params }: JuzPageProps) {
     <div className="py-6">
       <div className="flex items-center justify-between gap-3 border-b border-border pb-4">
         <div>
-          <h1 className="text-2xl font-bold text-text">Juz {juzNumber}</h1>
+          <h1 className="font-display text-2xl font-bold text-text">Juz {juzNumber}</h1>
           <p className="mt-1 text-sm text-muted">
             Mulai dari {start.surahEnglishName} ayat {start.ayahNumber} / {totalAyahs} ayat /{" "}
             {groups.length} surah
@@ -56,7 +56,7 @@ export default async function JuzPage({ params }: JuzPageProps) {
           {juzNumber > 1 ? (
             <Link
               href={`/juz/${juzNumber - 1}/`}
-              className="motion-fade rounded-md border border-border bg-base px-3 py-2 text-sm font-medium text-text hover:border-primary"
+              className="motion-fade rounded-sm border border-border bg-base px-3 py-2 text-sm font-medium text-text hover:border-primary"
             >
               ← Juz {juzNumber - 1}
             </Link>
@@ -64,7 +64,7 @@ export default async function JuzPage({ params }: JuzPageProps) {
           {juzNumber < 30 ? (
             <Link
               href={`/juz/${juzNumber + 1}/`}
-              className="motion-fade rounded-md border border-border bg-base px-3 py-2 text-sm font-medium text-text hover:border-primary"
+              className="motion-fade rounded-sm border border-border bg-base px-3 py-2 text-sm font-medium text-text hover:border-primary"
             >
               Juz {juzNumber + 1} →
             </Link>
@@ -77,9 +77,9 @@ export default async function JuzPage({ params }: JuzPageProps) {
           <section key={group.meta.number} aria-label={group.meta.englishName}>
             <Link
               href={`/surah/${group.meta.number}/?ayat=${group.ayahs[0].numberInSurah}`}
-              className="motion-fade mb-3 flex items-baseline justify-between gap-3 rounded-lg border border-border bg-surface p-4 hover:border-primary"
+              className="motion-fade mb-3 flex items-baseline justify-between gap-3 rounded-sm border border-border bg-surface p-4 hover:border-primary"
             >
-              <span className="text-base font-bold text-text">
+              <span className="font-display text-base font-bold text-text">
                 {group.meta.number}. {group.meta.englishName}
                 <span className="ml-2 text-xs font-normal text-muted">
                   {group.ayahs.length} ayat di juz ini
@@ -88,7 +88,7 @@ export default async function JuzPage({ params }: JuzPageProps) {
               <span className="font-arabic shrink-0 text-xl text-primary">{group.meta.name}</span>
             </Link>
 
-            <div className="rounded-lg border border-border bg-base p-5">
+            <div className="rounded-sm border border-border bg-base p-5">
               <p
                 dir="rtl"
                 lang="ar"
@@ -100,7 +100,7 @@ export default async function JuzPage({ params }: JuzPageProps) {
                     <Link
                       href={`/surah/${group.meta.number}/?ayat=${ayah.numberInSurah}`}
                       aria-label={`Buka ${group.meta.englishName} ayat ${ayah.numberInSurah}`}
-                      className="mx-1 inline-flex h-7 w-7 items-center justify-center rounded-full border border-border align-middle text-[11px] text-primary no-underline"
+                      className="mx-1 inline-flex h-7 w-7 items-center justify-center rounded-full border-[2px] border-double border-gold/70 align-middle text-[11px] text-gold no-underline"
                       dir="ltr"
                     >
                       {ayah.numberInSurah}

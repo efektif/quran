@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ChangelogPage() {
   return (
     <div className="py-6">
-      <h1 className="text-2xl font-bold text-text">Changelog</h1>
+      <h1 className="font-display text-2xl font-bold text-text">Changelog</h1>
       <p className="mt-1 text-sm text-muted">Pembaruan produk, terbaru di atas.</p>
 
       <div className="mt-6 flex flex-col gap-6">
@@ -18,9 +18,9 @@ export default function ChangelogPage() {
           <section
             key={release.date}
             aria-label={`Rilis ${release.date}`}
-            className="rounded-lg border border-border bg-base p-5"
+            className="rounded-sm border border-border bg-base p-5"
           >
-            <h2 className="text-sm font-bold text-primary">{release.date}</h2>
+            <h2 className="font-display text-sm font-bold text-primary">{release.date}</h2>
             <ul className="mt-3 flex flex-col gap-2">
               {release.items.map((item) => (
                 <li key={item} className="flex gap-2 text-sm leading-6 text-text">

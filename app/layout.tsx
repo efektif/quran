@@ -23,28 +23,28 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#090b0f" },
-    { media: "(prefers-color-scheme: light)", color: "#f7f8fc" },
+    { media: "(prefers-color-scheme: dark)", color: "#1d1811" },
+    { media: "(prefers-color-scheme: light)", color: "#1f5c3d" },
   ],
   width: "device-width",
   initialScale: 1,
 };
 
 /**
- * Applies the persisted theme before first paint. Dark is the System One
- * default, so only an explicit "light" choice flips the attribute.
+ * Applies the persisted theme before first paint. Light paper is the
+ * default, so only an explicit "dark" choice flips the attribute.
  */
-const themeBootstrap = `(function(){try{var s=JSON.parse(localStorage.getItem("quran-store")||"{}");var t=s.state&&s.state.theme;document.documentElement.dataset.theme=t==="light"?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();`;
+const themeBootstrap = `(function(){try{var s=JSON.parse(localStorage.getItem("quran-store")||"{}");var t=s.state&&s.state.theme;document.documentElement.dataset.theme=t==="dark"?"dark":"light";}catch(e){document.documentElement.dataset.theme="light";}})();`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="id" data-theme="dark" suppressHydrationWarning>
+    <html lang="id" data-theme="light" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Inter:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap"
           rel="stylesheet"
         />
       </head>

@@ -115,11 +115,11 @@ export function SurahReader({ surah, prev, next }: SurahReaderProps) {
   const header = (
     <div className="flex items-center justify-between gap-3 py-4">
       <div className="min-w-0">
-        <h1 className="truncate text-lg font-bold text-text">
+        <h1 className="truncate font-display text-lg font-bold text-text">
           {surah.number}. {surah.englishName}
         </h1>
         <p className="text-xs text-muted">
-          {surah.englishNameTranslation} / {surah.numberOfAyahs} ayat /{" "}
+          {surah.englishNameTranslation} · {surah.numberOfAyahs} ayat ·{" "}
           {surah.revelationType === "Meccan" ? "Makiyah" : "Madaniyah"}
         </p>
       </div>
@@ -129,7 +129,7 @@ export function SurahReader({ surah, prev, next }: SurahReaderProps) {
 
   const modeToggle = (
     <div
-      className="flex items-center gap-1 rounded-lg border border-border bg-base p-1"
+      className="flex items-center gap-1 rounded-sm border border-border bg-surface p-1"
       role="group"
       aria-label="Mode bacaan"
     >
@@ -139,8 +139,10 @@ export function SurahReader({ surah, prev, next }: SurahReaderProps) {
           type="button"
           onClick={() => setReadingMode(mode)}
           aria-pressed={readingMode === mode}
-          className={`motion-fade rounded-md px-3 py-1.5 text-xs font-semibold ${
-            readingMode === mode ? "bg-primary text-on-primary" : "text-muted hover:text-text"
+          className={`motion-fade rounded-sm border px-3 py-1.5 text-xs font-semibold ${
+            readingMode === mode
+              ? "border-border bg-base text-text"
+              : "border-transparent text-muted hover:text-text"
           }`}
         >
           {mode === "mushaf" ? "Mushaf" : "Pager"}
@@ -150,23 +152,23 @@ export function SurahReader({ surah, prev, next }: SurahReaderProps) {
   );
 
   const bismillah = showBismillah ? (
-    <div className="py-6 text-center">
+    <div className="my-4 rounded-sm border-[3px] border-double border-gold/70 bg-base py-6 text-center">
       <p className="font-arabic text-3xl leading-loose text-arabic" dir="rtl">
         {BISMILLAH_ARABIC}
       </p>
-      <p className="mt-1 text-xs text-muted">{BISMILLAH_TRANSLITERATION}</p>
+      <p className="mt-1 text-xs text-muted italic">{BISMILLAH_TRANSLITERATION}</p>
     </div>
   ) : null;
 
   const surahNav = (
     <nav
-      className="flex items-center justify-between gap-3 border-t border-border py-4"
+      className="flex items-center justify-between gap-3 border-t-[3px] border-double border-border py-4"
       aria-label="Navigasi surah"
     >
       {prev ? (
         <Link
           href={`/surah/${prev.number}/`}
-          className="motion-fade rounded-md border border-border bg-base px-3 py-2 text-sm font-medium text-text hover:border-primary"
+          className="motion-fade rounded-sm border border-border bg-base px-3 py-2 text-sm font-medium text-text hover:border-primary"
         >
           ← {prev.englishName}
         </Link>
@@ -176,7 +178,7 @@ export function SurahReader({ surah, prev, next }: SurahReaderProps) {
       {next ? (
         <Link
           href={`/surah/${next.number}/`}
-          className="motion-fade rounded-md border border-border bg-base px-3 py-2 text-sm font-medium text-text hover:border-primary"
+          className="motion-fade rounded-sm border border-border bg-base px-3 py-2 text-sm font-medium text-text hover:border-primary"
         >
           {next.englishName} →
         </Link>
@@ -229,7 +231,7 @@ export function SurahReader({ surah, prev, next }: SurahReaderProps) {
           <div className="mx-auto w-full max-w-3xl px-4">{surahNav}</div>
         </div>
 
-        <div className="pointer-events-none absolute top-20 right-4 rounded-md border border-border bg-base px-3 py-1 text-xs font-semibold text-primary">
+        <div className="pointer-events-none absolute top-20 right-4 rounded-sm border border-border bg-base px-3 py-1 font-display text-xs font-bold text-primary">
           {currentIndex + 1} / {surah.ayahs.length}
         </div>
 

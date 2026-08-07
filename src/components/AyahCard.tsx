@@ -38,13 +38,13 @@ export function AyahCard({ surah, ayah, audioState, onPlayAudio }: AyahCardProps
   };
 
   return (
-    <article className="rounded-lg border border-border bg-base p-5 sm:p-6">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <span className="rounded-md bg-surface px-2.5 py-1 text-xs font-semibold text-muted">
+    <article className="rounded-sm border border-border bg-base p-5 sm:p-6">
+      <div className="mb-4 flex items-center justify-between gap-3 border-b border-border pb-3">
+        <span className="font-display text-sm font-bold text-text">
           {surah.englishName} {surah.number}:{ayah.numberInSurah}
         </span>
         <span className="text-xs text-muted">
-          Juz {ayah.juz} / Hal. {ayah.page}
+          Juz {ayah.juz} · Hal. {ayah.page}
         </span>
       </div>
 
@@ -55,37 +55,35 @@ export function AyahCard({ surah, ayah, audioState, onPlayAudio }: AyahCardProps
       >
         {ayah.text}
         <span
-          className="mx-2 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border align-middle text-sm text-primary"
+          className="mx-2 inline-flex h-9 w-9 items-center justify-center rounded-full border-[3px] border-double border-gold align-middle text-sm text-gold"
           dir="ltr"
         >
           {toArabicIndic(ayah.numberInSurah)}
         </span>
       </p>
 
-      <div className="mt-5 border-t border-border pt-4">
+      <div className="mt-5 border-t-[3px] border-double border-border pt-4">
         {showId ? (
           <div className={showEn ? "mb-4" : undefined}>
-            <p className="mb-1.5 text-[11px] font-bold tracking-wide text-primary uppercase">
-              Terjemahan Kemenag RI
-            </p>
+            <p className="label-caps mb-1.5">Terjemahan Kemenag RI</p>
             <p className="text-base leading-7 text-text">{ayah.translationId}</p>
             {ayah.translationFootnotes ? (
-              <p className="mt-2 text-xs leading-5 text-muted">{ayah.translationFootnotes}</p>
+              <p className="mt-2 border-l-2 border-gold/50 pl-3 text-xs leading-5 text-muted">
+                {ayah.translationFootnotes}
+              </p>
             ) : null}
           </div>
         ) : null}
 
         {showEn ? (
           <div>
-            <p className="mb-1.5 text-[11px] font-bold tracking-wide text-primary uppercase">
-              Saheeh International
-            </p>
-            <p className="text-base leading-7 text-text">{ayah.translationEn}</p>
+            <p className="label-caps mb-1.5">Saheeh International</p>
+            <p className="text-base leading-7 text-text italic">{ayah.translationEn}</p>
           </div>
         ) : null}
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center gap-2">
+      <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-border pt-4">
         <ActionButton
           onClick={onPlayAudio}
           active={audioState !== "idle"}
@@ -117,7 +115,7 @@ export function AyahCard({ surah, ayah, audioState, onPlayAudio }: AyahCardProps
           target="_blank"
           rel="noreferrer"
           aria-label={`Baca tafsir ${surah.englishName} ayat ${ayah.numberInSurah} di quran.com`}
-          className="motion-fade rounded-md border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:border-primary hover:text-text"
+          className="motion-fade rounded-sm border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:border-primary hover:text-text"
         >
           Tafsir ↗
         </a>
@@ -143,7 +141,7 @@ function ActionButton({
       onClick={onClick}
       aria-label={label}
       aria-pressed={active}
-      className={`motion-fade rounded-md border px-3 py-1.5 text-xs font-semibold ${
+      className={`motion-fade rounded-sm border px-3 py-1.5 text-xs font-semibold ${
         active
           ? "border-primary bg-primary-soft text-primary"
           : "border-border text-muted hover:border-primary hover:text-text"

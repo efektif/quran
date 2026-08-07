@@ -9,9 +9,11 @@ export default async function HomePage() {
 
   return (
     <>
-      <div className="pt-6">
-        <h1 className="text-2xl font-bold text-text">Al-Quran</h1>
-        <p className="mt-1 text-sm text-muted">Pilih surah atau juz untuk dibaca</p>
+      <div className="border-b-[3px] border-double border-gold/60 pt-6 pb-4 text-center">
+        <h1 className="font-display text-3xl font-bold text-text">Al-Quran</h1>
+        <p className="mt-1 text-sm text-muted italic">
+          Terjemahan Kemenag RI &amp; Saheeh International
+        </p>
       </div>
       <div className="mt-4">
         <PrayerWidget />

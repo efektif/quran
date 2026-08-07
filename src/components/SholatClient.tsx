@@ -80,7 +80,7 @@ export function SholatClient() {
 
   return (
     <div className="py-6">
-      <h1 className="text-2xl font-bold text-text">Jadwal Sholat</h1>
+      <h1 className="font-display text-2xl font-bold text-text">Jadwal Sholat</h1>
       <p className="mt-1 text-sm text-muted">
         Dihitung di perangkat (metode {method}) — dapat berbeda beberapa menit dari jadwal resmi
         setempat.
@@ -92,19 +92,20 @@ export function SholatClient() {
         <>
           <section
             aria-label="Waktu sholat berikutnya"
-            className="mt-4 rounded-lg border border-primary/40 bg-primary-soft p-4"
+            className="mt-4 rounded-sm border-[3px] border-double border-gold/70 bg-primary-soft p-4"
           >
             {nextPrayer ? (
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs font-bold tracking-wide text-primary uppercase">
-                    Menuju {PRAYER_LABELS[nextPrayer.key]}
-                  </p>
-                  <p className="mt-1 text-2xl font-bold text-text" suppressHydrationWarning>
+                  <p className="label-caps text-primary">Menuju {PRAYER_LABELS[nextPrayer.key]}</p>
+                  <p
+                    className="mt-1 font-display text-2xl font-bold text-text"
+                    suppressHydrationWarning
+                  >
                     {formatCountdown(nextPrayer.at.getTime() - now.getTime())}
                   </p>
                 </div>
-                <p className="text-xl font-bold text-primary">
+                <p className="font-display text-xl font-bold text-primary">
                   {formatTimeInZone(nextPrayer.at, location.timezone)}
                 </p>
               </div>
@@ -113,7 +114,7 @@ export function SholatClient() {
 
           <div className="mt-4 flex items-center gap-2">
             <div
-              className="flex flex-1 items-center gap-1 rounded-lg border border-border bg-base p-1"
+              className="flex flex-1 items-center gap-1 rounded-sm border border-border bg-surface p-1"
               role="tablist"
               aria-label="Tampilan jadwal"
             >
@@ -124,8 +125,10 @@ export function SholatClient() {
                   role="tab"
                   aria-selected={view === value}
                   onClick={() => setView(value)}
-                  className={`motion-fade flex-1 rounded-md px-3 py-2 text-sm font-semibold ${
-                    view === value ? "bg-primary text-on-primary" : "text-muted hover:text-text"
+                  className={`motion-fade flex-1 rounded-sm border px-3 py-2 text-sm font-semibold ${
+                    view === value
+                      ? "border-border bg-base text-text"
+                      : "border-transparent text-muted hover:text-text"
                   }`}
                 >
                   {value === "harian" ? "Harian" : "Bulanan"}
@@ -140,7 +143,7 @@ export function SholatClient() {
               id="method-select"
               value={method}
               onChange={(event) => setSholatMethod(event.target.value)}
-              className="h-10 rounded-lg border border-border bg-base px-2 text-sm text-text"
+              className="h-10 rounded-sm border border-border bg-base px-2 text-sm text-text"
             >
               {SHOLAT_METHODS.map((option) => (
                 <option key={option.id} value={option.id}>
@@ -157,7 +160,7 @@ export function SholatClient() {
                   type="button"
                   onClick={() => setDayOffset((value) => value - 1)}
                   aria-label="Hari sebelumnya"
-                  className="motion-fade rounded-md border border-border bg-base px-3 py-2 text-sm text-text hover:border-primary"
+                  className="motion-fade rounded-sm border border-border bg-base px-3 py-2 text-sm text-text hover:border-primary"
                 >
                   ‹
                 </button>
@@ -173,7 +176,7 @@ export function SholatClient() {
                   type="button"
                   onClick={() => setDayOffset((value) => value + 1)}
                   aria-label="Hari berikutnya"
-                  className="motion-fade rounded-md border border-border bg-base px-3 py-2 text-sm text-text hover:border-primary"
+                  className="motion-fade rounded-sm border border-border bg-base px-3 py-2 text-sm text-text hover:border-primary"
                 >
                   ›
                 </button>
@@ -183,7 +186,7 @@ export function SholatClient() {
                 <button
                   type="button"
                   onClick={() => setDayOffset(0)}
-                  className="mb-3 w-full rounded-md border border-border py-1.5 text-xs font-semibold text-primary"
+                  className="mb-3 w-full rounded-sm border border-border py-1.5 text-xs font-semibold text-primary"
                 >
                   Kembali ke hari ini
                 </button>
@@ -196,7 +199,7 @@ export function SholatClient() {
                   return (
                     <li
                       key={key}
-                      className={`flex items-center justify-between rounded-lg border p-4 ${
+                      className={`flex items-center justify-between rounded-sm border p-4 ${
                         isNext ? "border-primary bg-primary-soft" : "border-border bg-base"
                       }`}
                     >
@@ -224,7 +227,7 @@ export function SholatClient() {
                   type="button"
                   onClick={() => setMonthOffset((value) => value - 1)}
                   aria-label="Bulan sebelumnya"
-                  className="motion-fade rounded-md border border-border bg-base px-3 py-2 text-sm text-text hover:border-primary"
+                  className="motion-fade rounded-sm border border-border bg-base px-3 py-2 text-sm text-text hover:border-primary"
                 >
                   ‹
                 </button>
@@ -239,13 +242,13 @@ export function SholatClient() {
                   type="button"
                   onClick={() => setMonthOffset((value) => value + 1)}
                   aria-label="Bulan berikutnya"
-                  className="motion-fade rounded-md border border-border bg-base px-3 py-2 text-sm text-text hover:border-primary"
+                  className="motion-fade rounded-sm border border-border bg-base px-3 py-2 text-sm text-text hover:border-primary"
                 >
                   ›
                 </button>
               </div>
 
-              <div className="overflow-x-auto rounded-lg border border-border">
+              <div className="overflow-x-auto rounded-sm border border-border">
                 <table className="w-full min-w-[560px] text-sm">
                   <thead>
                     <tr className="border-b border-border bg-surface text-left text-xs text-muted">
@@ -357,10 +360,10 @@ function LocationPicker() {
   };
 
   return (
-    <section aria-label="Lokasi" className="mt-4 rounded-lg border border-border bg-base p-4">
+    <section aria-label="Lokasi" className="mt-4 rounded-sm border border-border bg-base p-4">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[11px] font-bold tracking-wide text-muted uppercase">Lokasi</p>
+          <p className="label-caps">Lokasi</p>
           <p className="truncate text-sm font-semibold text-text">
             {location ? location.label : "Belum diatur"}
           </p>
@@ -369,7 +372,7 @@ function LocationPicker() {
           type="button"
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
-          className="motion-fade rounded-md border border-border px-3 py-2 text-xs font-semibold text-text hover:border-primary"
+          className="motion-fade rounded-sm border border-border px-3 py-2 text-xs font-semibold text-text hover:border-primary"
         >
           {open ? "Tutup" : "Ganti lokasi"}
         </button>
@@ -381,7 +384,7 @@ function LocationPicker() {
             type="button"
             onClick={useGeolocation}
             disabled={geoState === "working"}
-            className="motion-fade mb-3 w-full rounded-md bg-primary px-3 py-2.5 text-sm font-bold text-on-primary hover:opacity-90 disabled:opacity-50"
+            className="motion-fade mb-3 w-full rounded-sm bg-primary px-3 py-2.5 text-sm font-bold text-on-primary hover:opacity-90 disabled:opacity-50"
           >
             {geoState === "working" ? "Mendeteksi lokasi…" : "Gunakan lokasi saya"}
           </button>
@@ -399,7 +402,7 @@ function LocationPicker() {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Cari kota atau provinsi…"
-            className="h-10 w-full rounded-md border border-border bg-canvas px-3 text-sm text-text outline-none placeholder:text-muted focus:border-primary"
+            className="h-10 w-full rounded-sm border border-border bg-canvas px-3 text-sm text-text outline-none placeholder:text-muted focus:border-primary"
           />
 
           <ul className="mt-2 flex max-h-56 flex-col overflow-y-auto">
@@ -408,7 +411,7 @@ function LocationPicker() {
                 <button
                   type="button"
                   onClick={() => pick(city)}
-                  className="motion-fade flex w-full items-center justify-between rounded-md px-3 py-2 text-left hover:bg-surface"
+                  className="motion-fade flex w-full items-center justify-between rounded-sm px-3 py-2 text-left hover:bg-surface"
                 >
                   <span className="text-sm font-medium text-text">{city.name}</span>
                   <span className="text-xs text-muted">

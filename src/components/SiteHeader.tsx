@@ -28,9 +28,9 @@ export function SiteHeader() {
   const setTheme = useQuranStore((state) => state.setTheme);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-canvas/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b-[3px] border-double border-gold/70 bg-primary text-on-primary">
       <div className="mx-auto flex h-14 w-full max-w-3xl items-center gap-2 px-4">
-        <Link href="/" className="font-arabic text-xl text-primary" aria-label="Al-Quran — beranda">
+        <Link href="/" className="font-arabic text-xl" aria-label="Al-Quran — beranda">
           Al-Quran
         </Link>
 
@@ -42,8 +42,10 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`motion-fade rounded-md px-2.5 py-1.5 text-sm font-medium ${
-                  active ? "bg-primary-soft text-primary" : "text-muted hover:text-text"
+                className={`motion-fade rounded-sm px-2.5 py-1.5 text-sm font-medium ${
+                  active
+                    ? "bg-on-primary/15 font-bold text-on-primary"
+                    : "text-on-primary/75 hover:bg-on-primary/10 hover:text-on-primary"
                 }`}
               >
                 {item.label}
@@ -56,7 +58,7 @@ export function SiteHeader() {
           type="button"
           onClick={openSearchOverlay}
           aria-label="Cari ayat (Ctrl+K)"
-          className="motion-fade flex h-9 w-9 items-center justify-center rounded-md border border-border bg-base text-muted hover:text-text"
+          className="motion-fade flex h-9 w-9 items-center justify-center rounded-sm border border-on-primary/40 text-on-primary/90 hover:bg-on-primary/10 hover:text-on-primary"
         >
           <svg
             width="16"
@@ -79,7 +81,7 @@ export function SiteHeader() {
           type="button"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           aria-label={theme === "dark" ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
-          className="motion-fade flex h-9 w-9 items-center justify-center rounded-md border border-border bg-base text-muted hover:text-text"
+          className="motion-fade flex h-9 w-9 items-center justify-center rounded-sm border border-on-primary/40 text-on-primary/90 hover:bg-on-primary/10 hover:text-on-primary"
         >
           {hydrated && theme === "light" ? <MoonIcon /> : <SunIcon />}
         </button>
@@ -129,7 +131,7 @@ function SettingsMenu() {
         onClick={() => setOpen((value) => !value)}
         aria-label="Pengaturan"
         aria-expanded={open}
-        className="motion-fade flex h-9 w-9 items-center justify-center rounded-md border border-border bg-base text-muted hover:text-text"
+        className="motion-fade flex h-9 w-9 items-center justify-center rounded-sm border border-on-primary/40 text-on-primary/90 hover:bg-on-primary/10 hover:text-on-primary"
       >
         <svg
           width="16"
@@ -148,10 +150,8 @@ function SettingsMenu() {
       </button>
 
       {open ? (
-        <div className="absolute right-0 z-50 mt-2 w-64 rounded-lg border border-border bg-base p-3 shadow-lg">
-          <p className="mb-2 text-[11px] font-bold tracking-wide text-muted uppercase">
-            Terjemahan
-          </p>
+        <div className="absolute right-0 z-50 mt-2 w-64 rounded-sm border-2 border-border bg-base p-3">
+          <p className="label-caps mb-2">Terjemahan</p>
           <div className="mb-3 flex flex-col gap-1" role="radiogroup" aria-label="Mode terjemahan">
             {TRANSLATION_OPTIONS.map((option) => (
               <button
@@ -160,7 +160,7 @@ function SettingsMenu() {
                 role="radio"
                 aria-checked={translationMode === option.value}
                 onClick={() => setTranslationMode(option.value)}
-                className={`motion-fade rounded-md px-3 py-2 text-left text-sm font-medium ${
+                className={`motion-fade rounded-sm px-3 py-2 text-left text-sm font-medium ${
                   translationMode === option.value
                     ? "bg-primary-soft text-primary"
                     : "text-text hover:bg-surface"
@@ -171,12 +171,12 @@ function SettingsMenu() {
             ))}
           </div>
 
-          <p className="mb-2 text-[11px] font-bold tracking-wide text-muted uppercase">Offline</p>
+          <p className="label-caps mb-2">Offline</p>
           <button
             type="button"
             onClick={downloadOfflineData}
             disabled={downloadState === "working"}
-            className="motion-fade mb-3 w-full rounded-md border border-border px-3 py-2 text-left text-sm font-medium text-text hover:border-primary disabled:opacity-50"
+            className="motion-fade mb-3 w-full rounded-sm border border-border px-3 py-2 text-left text-sm font-medium text-text hover:border-primary disabled:opacity-50"
           >
             {downloadState === "working"
               ? "Mengunduh 114 surah…"
@@ -191,7 +191,7 @@ function SettingsMenu() {
             href={ABOUT_URL}
             target="_blank"
             rel="noreferrer"
-            className="block rounded-md px-3 py-2 text-sm font-medium text-muted hover:bg-surface hover:text-text"
+            className="block rounded-sm px-3 py-2 text-sm font-medium text-muted hover:bg-surface hover:text-text"
           >
             Tentang ↗
           </a>

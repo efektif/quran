@@ -8,7 +8,11 @@ per-ayah audio, offline PWA, and jadwal sholat with Kemenag calculation.
 ## Stack
 
 - TypeScript / Next.js 16.3.0 App Router, `output: "export"` (fully static)
-- Tailwind CSS v4 with System One tokens (dark default, light via `data-theme`)
+- Tailwind CSS v4 with a classic mushaf theme (cream paper default, sepia
+  night mode via `data-theme`). **Intentional deviation from the System One
+  contract** (root AGENTS.md): the owner asked for an old-school look —
+  deep green `#1F5C3D` primary instead of blue, gold `#9A7B2D` ornaments,
+  Georgia serif headings, 3px radius, no decorative shadows.
 - Zustand + localStorage for all user state; no backend, no accounts
 - Prayer times: `@masaajid/prayer-times` (Kemenag method), validated against
   `adhan` in unit tests
