@@ -1,6 +1,4 @@
 {
-  "recommendations": [
-    "expo.vscode-expo-tools"
-  ],
+  "recommendations": ["oxc.oxc-vscode"],
   "unwantedRecommendations": []
 }

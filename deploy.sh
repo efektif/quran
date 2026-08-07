@@ -57,8 +57,7 @@ rm -rf -- node_modules
 pnpm install --frozen-lockfile
 
 compgen -G '.env*.local' >/dev/null && fail "Local environment files are not allowed during deployment"
-rm -rf -- .expo dist test-results
-rm -f -- expo-env.d.ts
+rm -rf -- .next out test-results
 
 log "Running quality gates"
 pnpm lint
@@ -70,16 +69,16 @@ rm -rf -- test-results
 [[ -z "$(git status --porcelain)" ]] || fail "Quality gates modified tracked or untracked files"
 [[ "$(git rev-parse HEAD)" == "$deployed_commit" ]] || fail "Quran HEAD changed during quality gates"
 
-log "Building static Expo export"
-rm -rf -- dist
+log "Building static Next.js export"
+rm -rf -- out
 pnpm build
 [[ -z "$(git status --porcelain)" ]] || fail "Build modified tracked or untracked files"
 [[ "$(git rev-parse HEAD)" == "$deployed_commit" ]] || fail "Quran HEAD changed during build"
-for required in dist/index.html dist/reader.html dist/changelog.html; do
+for required in out/index.html out/surah/1/index.html out/juz/30/index.html out/sholat/index.html out/changelog/index.html out/manifest.webmanifest out/sw.js out/data/surah/1.json out/data/search-index.json out/data/juz-map.json; do
   [[ -s "$required" ]] || fail "Required export is missing or empty: $required"
 done
-[[ -z "$(find dist -type l -print -quit)" ]] || fail "Export contains a symbolic link"
-[[ -z "$(find dist ! -type f ! -type d -print -quit)" ]] || fail "Export contains a special file"
+[[ -z "$(find out -type l -print -quit)" ]] || fail "Export contains a symbolic link"
+[[ -z "$(find out ! -type f ! -type d -print -quit)" ]] || fail "Export contains a special file"
 
 exchange_paths() {
   /usr/bin/sudo /usr/bin/python3 -I - "$1" "$2" <<'PY'
@@ -141,11 +140,11 @@ trap 'exit 129' HUP
 
 log "Staging release at $release"
 /usr/bin/sudo /usr/bin/install -d -m 0755 -o root -g root -- "$release"
-/usr/bin/sudo /usr/bin/rsync -rt --delete --chown=root:root --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r -- dist/ "$release"/
+/usr/bin/sudo /usr/bin/rsync -rt --delete --chown=root:root --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r -- out/ "$release"/
 
 [[ -z "$(/usr/bin/sudo /usr/bin/find "$release" -type l -print -quit)" ]] || fail "Staged release contains a symbolic link"
 [[ -z "$(/usr/bin/sudo /usr/bin/find "$release" ! -type f ! -type d -print -quit)" ]] || fail "Staged release contains a special file"
-diff -qr -- dist "$release" >/dev/null || fail "Staged release differs from dist"
+diff -qr -- out "$release" >/dev/null || fail "Staged release differs from out"
 [[ -d "$WEB_ROOT" && ! -L "$WEB_ROOT" && "$(stat -c '%U:%G' "$WEB_ROOT")" == "root:root" ]] || fail "Live web root changed during the build"
 [[ -d "$release" && ! -L "$release" && "$(stat -c '%U:%G' "$release")" == "root:root" ]] || fail "Staged release is not a root-owned directory"
 [[ ! -e "$backup" && ! -L "$backup" ]] || fail "Backup destination already exists: $backup"
@@ -171,8 +170,8 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 trap 'exit 129' HUP
 
-if ! diff -qr -- dist "$WEB_ROOT" >/dev/null; then
-  fail "Deployed files differ from dist"
+if ! diff -qr -- out "$WEB_ROOT" >/dev/null; then
+  fail "Deployed files differ from out"
 fi
 
 log "Running production smoke checks"
@@ -183,20 +182,20 @@ check_200() {
   [[ "$code" == "200" ]] || fail "Expected HTTP 200 from $url, got $code"
 }
 
-for path in / /reader /changelog; do
+for path in / /surah/1/ /juz/30/ /sholat/ /changelog/; do
   check_200 "${SITE_URL}${path}?deploy=${deployed_commit}"
 done
 
-index_html="$(<dist/index.html)"
-if [[ "$index_html" =~ (entry-[a-f0-9]+\.js) ]]; then
+index_html="$(<out/index.html)"
+if [[ "$index_html" =~ (/_next/static/chunks/[a-zA-Z0-9_-]+\.js) ]]; then
   bundle="${BASH_REMATCH[1]}"
 else
   bundle=""
 fi
-[[ -n "$bundle" ]] || fail "Could not identify the production JavaScript bundle"
-check_200 "${SITE_URL}/_expo/static/js/web/${bundle}"
+[[ -n "$bundle" ]] || fail "Could not identify a production JavaScript chunk"
+check_200 "${SITE_URL}${bundle}"
 live_index="$(curl --proto '=https' --tlsv1.2 --fail --silent --show-error --max-time 30 "${SITE_URL}/?deploy=${deployed_commit}")"
-[[ "$live_index" == *"$bundle"* ]] || fail "Live HTML does not reference the deployed bundle"
+[[ "$live_index" == *"$bundle"* ]] || fail "Live HTML does not reference the deployed chunk"
 changelog_html="$(curl --proto '=https' --tlsv1.2 --fail --silent --show-error --max-time 30 "${SITE_URL}/changelog?deploy=${deployed_commit}")"
 [[ "$changelog_html" == *'2026-07-24'* ]] || fail "Changelog release marker is missing"
 
