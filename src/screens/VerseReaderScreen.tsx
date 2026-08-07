@@ -13,17 +13,10 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { quranData } from "../data/quran";
-import {
-  Button,
-  Card,
-  quranColors,
-  quranTheme,
-  quranTint,
-  Screen,
-  Text,
-} from "../design-system";
+import { Button, Card, quranColors, quranTheme, quranTint, Screen, Text } from "../design-system";
 import type { Ayah, Surah } from "../types/quran";
 import { useLastViewedAyat } from "../hooks/useLastViewedAyat";
+import { getInitialVerseIndex } from "../utils/reader";
 
 interface VerseItem {
   ayah: Ayah;
@@ -152,11 +145,6 @@ export default function VerseReaderScreen() {
   const surahNumber = Number(surahValue);
   const parsedStartAyah = Number(startAyahValue ?? 1);
   const startAyah = Number.isInteger(parsedStartAyah) && parsedStartAyah > 0 ? parsedStartAyah : 1;
-  const flatListRef = useRef<FlatList<VerseItem>>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const { saveLastViewed } = useLastViewedAyat();
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const currentAyahRef = useRef({ surahNumber, ayahNumber: startAyah });
 
   const surah = useMemo(
     () => quranData.surahs.find((s) => s.number === surahNumber),
@@ -168,16 +156,25 @@ export default function VerseReaderScreen() {
     return surah.ayahs.map((ayah) => ({ ayah, surah }));
   }, [surah]);
 
-  const initialScrollIndex = useMemo(() => {
-    return Math.max(0, startAyah - 1);
-  }, [startAyah]);
+  // Deep links and persisted progress are external inputs. Clamp before giving
+  // FlatList an index so an out-of-range ayah cannot crash the reader.
+  const initialScrollIndex = getInitialVerseIndex(startAyah, verses.length);
+  const flatListRef = useRef<FlatList<VerseItem>>(null);
+  const [currentIndex, setCurrentIndex] = useState(initialScrollIndex);
+  const { saveLastViewed } = useLastViewedAyat();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentAyahRef = useRef<{ surahNumber: number; ayahNumber: number } | null>(
+    surah ? { surahNumber, ayahNumber: initialScrollIndex + 1 } : null,
+  );
 
   useEffect(() => {
     return () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-      saveLastViewed(currentAyahRef.current.surahNumber, currentAyahRef.current.ayahNumber);
+      if (currentAyahRef.current) {
+        saveLastViewed(currentAyahRef.current.surahNumber, currentAyahRef.current.ayahNumber);
+      }
     };
   }, [saveLastViewed]);
 
