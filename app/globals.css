@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * System One tokens. Dark is the default (no .dark class needed); the light
+ * theme activates via [data-theme="light"] on <html>. Both profiles share the
+ * same variable names so components never branch on theme.
+ */
+:root,
+.dark {
+  --canvas: #090b0f;
+  --base: #0d1015;
+  --surface: #141a24;
+  --surface-muted: #1a2130;
+  --border: #232b3a;
+  --text: #f2f4f8;
+  --text-muted: #8b93a7;
+  --primary: #6e7bff;
+  --on-primary: #ffffff;
+  --primary-soft: rgba(110, 123, 255, 0.14);
+  --arabic: #f6f1e7;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --canvas: #f7f8fc;
+  --base: #ffffff;
+  --surface: #f0f3fa;
+  --surface-muted: #e5eaff;
+  --border: #d7dce8;
+  --text: #111318;
+  --text-muted: #687386;
+  --primary: #2563eb;
+  --on-primary: #ffffff;
+  --primary-soft: rgba(37, 99, 235, 0.1);
+  --arabic: #1a2332;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-base: var(--base);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-arabic: var(--arabic);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "Amiri Quran", "Scheherazade New", "Traditional Arabic", serif;
+}
+
+html {
+  background: var(--canvas);
+}
+
+body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* System One motion: 100-140ms feedback, honor reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .motion-fade {
+    transition:
+      opacity 120ms ease,
+      transform 120ms ease,
+      background-color 120ms ease,
+      border-color 120ms ease;
+  }
+}
+
+.font-arabic {
+  font-family: var(--font-arabic);
+}
+
+/* Pager mode: one ayah per screen, vertical snap. */
+.pager-scroll {
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+}
+.pager-scroll::-webkit-scrollbar {
+  display: none;
+}
+.pager-page {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}

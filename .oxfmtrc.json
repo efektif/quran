@@ -9,6 +9,8 @@
     "coverage/**",
     "dist/**",
     "node_modules/**",
+    "out/**",
+    "public/data/**",
     "src-tauri/gen/**",
     "src-tauri/target/**"
   ]
