@@ -53,6 +53,10 @@ interface QuranState {
   location: SholatLocation | null;
   setLocation: (location: SholatLocation) => void;
 
+  /** Calculation method id from @masaajid/prayer-times (default Kemenag). */
+  sholatMethod: string;
+  setSholatMethod: (method: string) => void;
+
   audioAutoAdvance: boolean;
   setAudioAutoAdvance: (value: boolean) => void;
 }
@@ -110,6 +114,9 @@ export const useQuranStore = create<QuranState>()(
 
       location: null,
       setLocation: (location) => set({ location }),
+
+      sholatMethod: "Kemenag",
+      setSholatMethod: (sholatMethod) => set({ sholatMethod }),
 
       audioAutoAdvance: true,
       setAudioAutoAdvance: (audioAutoAdvance) => set({ audioAutoAdvance }),

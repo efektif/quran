@@ -1,5 +1,6 @@
 import { AlKahfReminder } from "../src/components/AlKahfReminder";
 import { HomeClient } from "../src/components/HomeClient";
+import { PrayerWidget } from "../src/components/PrayerWidget";
 import { SURAH_INDEX } from "../src/data/surah-index";
 import { getJuzMap } from "../src/lib/quran";
 
@@ -11,6 +12,9 @@ export default async function HomePage() {
       <div className="pt-6">
         <h1 className="text-2xl font-bold text-text">Al-Quran</h1>
         <p className="mt-1 text-sm text-muted">Pilih surah atau juz untuk dibaca</p>
+      </div>
+      <div className="mt-4">
+        <PrayerWidget />
       </div>
       <HomeClient surahs={SURAH_INDEX} juzMap={juzMap} />
       <AlKahfReminder />
