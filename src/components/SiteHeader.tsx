@@ -21,18 +21,13 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-canvas/90 backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-3xl items-center gap-2 px-4">
-        <Link
-          href="/"
-          className="font-arabic text-xl text-primary"
-          aria-label="Al-Quran — beranda"
-        >
+        <Link href="/" className="font-arabic text-xl text-primary" aria-label="Al-Quran — beranda">
           Al-Quran
         </Link>
 
         <nav className="ml-2 flex flex-1 items-center gap-1" aria-label="Navigasi utama">
           {NAV_ITEMS.map((item) => {
-            const active =
-              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}
@@ -64,7 +59,16 @@ export function SiteHeader() {
 
 function SunIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      aria-hidden
+    >
       <circle cx="12" cy="12" r="4" />
       <path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4 1.4-1.4" />
     </svg>
@@ -73,7 +77,17 @@ function SunIcon() {
 
 function MoonIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
       <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
     </svg>
   );

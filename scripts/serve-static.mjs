@@ -48,7 +48,9 @@ const server = createServer((req, res) => {
     res.end("Not found");
     return;
   }
-  res.writeHead(200, { "content-type": MIME[path.extname(filePath)] ?? "application/octet-stream" });
+  res.writeHead(200, {
+    "content-type": MIME[path.extname(filePath)] ?? "application/octet-stream",
+  });
   createReadStream(filePath).pipe(res);
 });
 

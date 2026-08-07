@@ -94,7 +94,9 @@ export const useQuranStore = create<QuranState>()(
         const day = log[dayKey] ?? [];
         if (day.includes(key)) return;
         // Keep at most the last 14 days to bound storage growth.
-        const entries = Object.entries(log).sort(([a], [b]) => b.localeCompare(a)).slice(0, 13);
+        const entries = Object.entries(log)
+          .sort(([a], [b]) => b.localeCompare(a))
+          .slice(0, 13);
         set({
           readingLog: {
             ...Object.fromEntries(entries),

@@ -37,21 +37,15 @@ export const CHANGELOG_RELEASES: ChangelogRelease[] = [
   },
   {
     date: "2026-06-12",
-    items: [
-      "Radius chrome mobile diselaraskan dengan token radius Efektif native.",
-    ],
+    items: ["Radius chrome mobile diselaraskan dengan token radius Efektif native."],
   },
   {
     date: "2026-06-06",
-    items: [
-      "Tampilan Quran diselaraskan dengan arah visual Efektif Tools.",
-    ],
+    items: ["Tampilan Quran diselaraskan dengan arah visual Efektif Tools."],
   },
   {
     date: "2026-05-15",
-    items: [
-      "Tautan About di daftar Surah yang membuka profil Moriz Kay.",
-    ],
+    items: ["Tautan About di daftar Surah yang membuka profil Moriz Kay."],
   },
   {
     date: "2026-05-14",
@@ -62,9 +56,7 @@ export const CHANGELOG_RELEASES: ChangelogRelease[] = [
   },
   {
     date: "2026-04-18",
-    items: [
-      "Tombol Baca Tafseer per ayat yang membuka halaman tafseer di quran.com.",
-    ],
+    items: ["Tombol Baca Tafseer per ayat yang membuka halaman tafseer di quran.com."],
   },
   {
     date: "2026-01-21",
@@ -75,8 +67,6 @@ export const CHANGELOG_RELEASES: ChangelogRelease[] = [
   },
   {
     date: "2026-01-20",
-    items: [
-      "Rilis awal pembaca Al-Quran dengan daftar Surah dan pembaca ayat.",
-    ],
+    items: ["Rilis awal pembaca Al-Quran dengan daftar Surah dan pembaca ayat."],
   },
 ];

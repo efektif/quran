@@ -68,7 +68,8 @@ test("pages to the next ayah on a mobile viewport", async ({ page, context }) =>
 
   await expect(page.getByText("2 / 7", { exact: true })).toBeVisible({ timeout: 5_000 });
   await expect(page.getByText(/الْحَمْدُ/).first()).toBeVisible();
-});test("opens the changelog page", async ({ page }) => {
+});
+test("opens the changelog page", async ({ page }) => {
   await page.goto("/");
 
   await dismissAlKahfReminder(page);
