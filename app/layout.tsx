@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
+import { SearchOverlay } from "../src/components/SearchOverlay";
+import { ServiceWorkerRegistrar } from "../src/components/ServiceWorkerRegistrar";
 import { SiteHeader } from "../src/components/SiteHeader";
 import { StoreHydrator } from "../src/components/StoreHydrator";
 
@@ -48,8 +50,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="min-h-dvh bg-canvas text-text">
         <StoreHydrator />
+        <ServiceWorkerRegistrar />
         <SiteHeader />
         <main className="mx-auto w-full max-w-3xl px-4 pb-24">{children}</main>
+        <SearchOverlay />
       </body>
     </html>
   );
