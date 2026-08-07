@@ -96,6 +96,14 @@ body {
   font-family: var(--font-arabic);
 }
 
+/* Scroll mode pages scroll long translations internally; hide that bar too. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Pager mode: one ayah per screen, vertical snap. */
 .pager-scroll {
   scroll-snap-type: y mandatory;

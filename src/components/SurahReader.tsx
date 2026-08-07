@@ -9,6 +9,7 @@ import { BISMILLAH_TRANSLITERATION } from "../lib/constants";
 import { useHasHydrated, useQuranStore } from "../lib/store";
 import { getInitialVerseIndex } from "../utils/reader";
 import { AyahCard } from "./AyahCard";
+import { AyahScrollCard } from "./AyahScrollCard";
 import { AudioPlayerBar } from "./AudioPlayerBar";
 import type { Surah, SurahMeta } from "../lib/types";
 
@@ -88,6 +89,24 @@ export function SurahReader({ surah, prev, next }: SurahReaderProps) {
     return () => observer.disconnect();
   }, [readingMode, markViewed]);
 
+  // Pager: let audio (auto-)advance drive the feed like an endless scroll
+  // session. Only audio-position changes scroll the list — a user swipe that
+  // changes currentIndex must never snap back to the playing ayah.
+  const lastAudioAyah = useRef<number | null>(null);
+  useEffect(() => {
+    const ayah = audio.currentAyah;
+    if (readingMode === "pager" && ayah !== null && ayah !== lastAudioAyah.current) {
+      if (ayah - 1 !== currentIndex) {
+        pagerRef.current?.children[ayah - 1]?.scrollIntoView({
+          block: "start",
+          behavior: "smooth",
+        });
+      }
+    }
+    lastAudioAyah.current = ayah;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audio.currentAyah, readingMode]);
+
   // Mushaf: record reading progress on scroll.
   useEffect(() => {
     if (readingMode !== "mushaf") return;
@@ -145,7 +164,7 @@ export function SurahReader({ surah, prev, next }: SurahReaderProps) {
               : "border-transparent text-muted hover:text-text"
           }`}
         >
-          {mode === "mushaf" ? "Mushaf" : "Pager"}
+          {mode === "mushaf" ? "Mushaf" : "Scroll"}
         </button>
       ))}
     </div>
@@ -218,17 +237,23 @@ export function SurahReader({ surah, prev, next }: SurahReaderProps) {
               aria-label={`Ayat ${ayah.numberInSurah}`}
             >
               {index === 0 ? bismillah : null}
-              <div className="flex flex-1 flex-col justify-center py-6">
-                <AyahCard
-                  surah={surah}
-                  ayah={ayah}
-                  audioState={audio.stateFor(ayah.numberInSurah)}
-                  onPlayAudio={() => audio.toggle(ayah.numberInSurah)}
-                />
-              </div>
+              <AyahScrollCard
+                surah={surah}
+                ayah={ayah}
+                audioState={audio.stateFor(ayah.numberInSurah)}
+                onPlayAudio={() => audio.toggle(ayah.numberInSurah)}
+              />
             </section>
           ))}
-          <div className="mx-auto w-full max-w-3xl px-4">{surahNav}</div>
+          <div
+            className="pager-page mx-auto flex w-full max-w-3xl flex-col justify-center px-4"
+            style={{ minHeight: "100%" }}
+          >
+            <p className="py-4 text-center font-display text-lg font-bold text-text">
+              Tamat {surah.englishName}
+            </p>
+            {surahNav}
+          </div>
         </div>
 
         <div className="pointer-events-none absolute top-20 right-4 rounded-sm border border-border bg-base px-3 py-1 font-display text-xs font-bold text-primary">
