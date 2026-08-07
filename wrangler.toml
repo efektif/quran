@@ -1,0 +1,5 @@
+# Static Cloudflare Pages deploy for Next.js `output: "export"`.
+# Do NOT use `wrangler deploy` (Workers/OpenNext). Use `wrangler pages deploy`.
+name = "efektif-quran"
+compatibility_date = "2026-08-07"
+pages_build_output_dir = "out"

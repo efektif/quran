@@ -43,8 +43,21 @@ Run from this repository root:
 ## Deployment
 
 `./deploy.sh` builds `out/` and atomically swaps it into the Caddy web root
-for quran.efektif.app with rollback on failure. `pnpm deploy` is the
-Cloudflare Pages alternative (wrangler). `pnpm start` serves `out/` locally.
+for quran.efektif.app with rollback on failure. `pnpm start` serves `out/`
+locally.
+
+Cloudflare Pages (static export via `wrangler.toml` /
+`pages_build_output_dir = "out"`):
+
+- Local / CLI: `pnpm deploy` (build + upload) or `pnpm deploy:pages` (upload
+  only).
+- Dashboard / CI build settings must stay static — never set the deploy
+  command to `npx wrangler deploy` (that triggers Workers/OpenNext auto
+  migration and fails on `output: "export"`):
+  - Build command: `pnpm run build`
+  - Build output directory: `out`
+  - Deploy command (if custom): `pnpm run deploy:pages`
+  - Framework preset: None / static (not Next.js Workers)
 
 ## Editor extensions
 
