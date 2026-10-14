@@ -22,6 +22,9 @@ const TOTAL_AYAHS = 6_236;
 const TRANSLATION_BATCH_SIZE = 12;
 const INDONESIAN_TRANSLATION_KEY = "indonesian_affairs";
 
+const EXTRA_EDITIONS = ["id.muntakhab", "id.jalalayn", "en.asad", "en.yusufali", "en.pickthall"] as const;
+type ExtraEdition = (typeof EXTRA_EDITIONS)[number];
+
 interface ApiAyah {
   number: number;
   text: string;
@@ -107,11 +110,15 @@ function assertAyahAlignment(surah: ApiSurah, english: ApiSurah, indonesian: Qur
 }
 
 async function main() {
-  console.log("Fetching quran-uthmani and en.sahih editions...");
-  const [arabicSurahs, englishSurahs] = await Promise.all([
+  console.log("Fetching quran-uthmani, en.sahih, and extra editions...");
+  const [arabicSurahs, englishSurahs, ...extraEditionSurahs] = await Promise.all([
     fetchEdition("quran-uthmani"),
     fetchEdition("en.sahih"),
+    ...EXTRA_EDITIONS.map((id) => fetchEdition(id)),
   ]);
+  const extraEditions = Object.fromEntries(
+    EXTRA_EDITIONS.map((id, index) => [id, extraEditionSurahs[index]]),
+  ) as Record<ExtraEdition, ApiSurah[]>;
   const indonesianSurahs = await fetchIndonesianTranslations();
 
   if (arabicSurahs.length !== TOTAL_SURAHS) {
@@ -173,6 +180,11 @@ async function main() {
           lastSeenJuz = ayah.juz;
         }
 
+        const translations: Partial<Record<ExtraEdition, string>> = {};
+        for (const edition of EXTRA_EDITIONS) {
+          translations[edition] = extraEditions[edition][surah.number - 1].ayahs[ayahIndex].text;
+        }
+
         return {
           number: ayah.number,
           numberInSurah: ayah.numberInSurah,
@@ -180,6 +192,7 @@ async function main() {
           translationId: translated.translation,
           ...(translated.footnotes ? { translationFootnotes: translated.footnotes } : {}),
           translationEn: english.ayahs[ayahIndex].text,
+          translations,
           juz: ayah.juz,
           page: ayah.page,
           hizbQuarter: ayah.hizbQuarter,

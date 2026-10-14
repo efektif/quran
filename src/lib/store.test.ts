@@ -22,7 +22,8 @@ import { useQuranStore } from "./store";
 function resetStore() {
   useQuranStore.setState({
     theme: "light",
-    translationMode: "id",
+    idTranslation: "id.indonesian",
+    enTranslation: null,
     readingMode: "mushaf",
     bookmarks: [],
     lastViewed: null,
@@ -41,7 +42,8 @@ describe("quran store", () => {
   it("has light paper default and Kemenag prayer method", () => {
     const state = useQuranStore.getState();
     expect(state.theme).toBe("light");
-    expect(state.translationMode).toBe("id");
+    expect(state.idTranslation).toBe("id.indonesian");
+    expect(state.enTranslation).toBeNull();
     expect(state.readingMode).toBe("mushaf");
     expect(state.sholatMethod).toBe("Kemenag");
     expect(state.audioAutoAdvance).toBe(true);

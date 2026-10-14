@@ -4,7 +4,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export type Theme = "dark" | "light";
-export type TranslationMode = "id" | "en" | "both";
 export type ReadingMode = "pager" | "mushaf";
 
 export interface Bookmark {
@@ -31,8 +30,13 @@ interface QuranState {
   theme: Theme;
   setTheme: (theme: Theme) => void;
 
-  translationMode: TranslationMode;
-  setTranslationMode: (mode: TranslationMode) => void;
+  /** Active Indonesian translation identifier; null hides it. */
+  idTranslation: string | null;
+  setIdTranslation: (id: string | null) => void;
+
+  /** Active English translation identifier; null hides it. */
+  enTranslation: string | null;
+  setEnTranslation: (id: string | null) => void;
 
   readingMode: ReadingMode;
   setReadingMode: (mode: ReadingMode) => void;
@@ -70,8 +74,11 @@ export const useQuranStore = create<QuranState>()(
       theme: "light",
       setTheme: (theme) => set({ theme }),
 
-      translationMode: "id",
-      setTranslationMode: (translationMode) => set({ translationMode }),
+      idTranslation: "id.indonesian",
+      setIdTranslation: (idTranslation) => set({ idTranslation }),
+
+      enTranslation: null,
+      setEnTranslation: (enTranslation) => set({ enTranslation }),
 
       readingMode: "mushaf",
       setReadingMode: (readingMode) => set({ readingMode }),

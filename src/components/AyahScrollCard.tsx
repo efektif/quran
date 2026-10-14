@@ -16,8 +16,15 @@ interface AyahScrollCardProps {
 
 /** Full-screen ayah for the TikTok-style "Scroll" feed: no card chrome,
  *  actions on a vertical rail, meta line floating at the bottom. */
+function resolveTranslation(ayah: Ayah, identifier: string): string {
+  if (identifier === "id.indonesian") return ayah.translationId;
+  if (identifier === "en.sahih") return ayah.translationEn;
+  return ayah.translations?.[identifier] ?? "";
+}
+
 export function AyahScrollCard({ surah, ayah, audioState, onPlayAudio }: AyahScrollCardProps) {
-  const translationMode = useQuranStore((state) => state.translationMode);
+  const idTranslation = useQuranStore((state) => state.idTranslation);
+  const enTranslation = useQuranStore((state) => state.enTranslation);
   const bookmarks = useQuranStore((state) => state.bookmarks);
   const toggleBookmark = useQuranStore((state) => state.toggleBookmark);
   const [copied, setCopied] = useState(false);
@@ -25,11 +32,12 @@ export function AyahScrollCard({ surah, ayah, audioState, onPlayAudio }: AyahScr
   const bookmarked = bookmarks.some(
     (b) => b.surah === surah.number && b.ayah === ayah.numberInSurah,
   );
-  const showId = translationMode === "id" || translationMode === "both";
-  const showEn = translationMode === "en" || translationMode === "both";
+
+  const idText = idTranslation ? resolveTranslation(ayah, idTranslation) : null;
+  const enText = enTranslation ? resolveTranslation(ayah, enTranslation) : null;
 
   const handleCopy = async () => {
-    const parts = [ayah.text, ayah.translationId, ayah.translationEn].filter(Boolean);
+    const parts = [ayah.text, idText, enText].filter(Boolean);
     try {
       await navigator.clipboard.writeText(parts.join("\n\n"));
       setCopied(true);
@@ -57,17 +65,17 @@ export function AyahScrollCard({ surah, ayah, audioState, onPlayAudio }: AyahScr
         </p>
 
         <div className="mt-6 border-t-[3px] border-double border-border pt-4">
-          {showId ? (
-            <p className="text-[1rem] leading-7 text-text">{ayah.translationId}</p>
+          {idText ? (
+            <p className="text-[1rem] leading-7 text-text">{idText}</p>
           ) : null}
-          {showId && ayah.translationFootnotes ? (
+          {idTranslation === "id.indonesian" && idText && ayah.translationFootnotes ? (
             <p className="mt-2 border-l-2 border-gold/50 pl-3 text-xs leading-5 text-muted">
               {ayah.translationFootnotes}
             </p>
           ) : null}
-          {showEn ? (
-            <p className={`text-sm leading-6 text-muted italic ${showId ? "mt-3" : ""}`}>
-              {ayah.translationEn}
+          {enText ? (
+            <p className={`text-sm leading-6 text-muted italic ${idText ? "mt-3" : ""}`}>
+              {enText}
             </p>
           ) : null}
         </div>

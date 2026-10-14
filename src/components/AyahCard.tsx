@@ -6,6 +6,7 @@ import type { AyahAudioState } from "../lib/audio";
 import { TAFSIR_BASE_URL } from "../lib/constants";
 import { useQuranStore } from "../lib/store";
 import type { Ayah, Surah } from "../lib/types";
+import { TRANSLATION_SOURCES } from "../data/translation-sources";
 
 interface AyahCardProps {
   surah: Surah;
@@ -14,8 +15,19 @@ interface AyahCardProps {
   onPlayAudio: () => void;
 }
 
+function resolveTranslation(ayah: Ayah, identifier: string): string {
+  if (identifier === "id.indonesian") return ayah.translationId;
+  if (identifier === "en.sahih") return ayah.translationEn;
+  return ayah.translations?.[identifier] ?? "";
+}
+
+function translationLabel(identifier: string): string {
+  return TRANSLATION_SOURCES.find((s) => s.identifier === identifier)?.label ?? identifier;
+}
+
 export function AyahCard({ surah, ayah, audioState, onPlayAudio }: AyahCardProps) {
-  const translationMode = useQuranStore((state) => state.translationMode);
+  const idTranslation = useQuranStore((state) => state.idTranslation);
+  const enTranslation = useQuranStore((state) => state.enTranslation);
   const bookmarks = useQuranStore((state) => state.bookmarks);
   const toggleBookmark = useQuranStore((state) => state.toggleBookmark);
   const [copied, setCopied] = useState(false);
@@ -23,11 +35,12 @@ export function AyahCard({ surah, ayah, audioState, onPlayAudio }: AyahCardProps
   const bookmarked = bookmarks.some(
     (b) => b.surah === surah.number && b.ayah === ayah.numberInSurah,
   );
-  const showId = translationMode === "id" || translationMode === "both";
-  const showEn = translationMode === "en" || translationMode === "both";
+
+  const idText = idTranslation ? resolveTranslation(ayah, idTranslation) : null;
+  const enText = enTranslation ? resolveTranslation(ayah, enTranslation) : null;
 
   const handleCopy = async () => {
-    const parts = [ayah.text, ayah.translationId, ayah.translationEn].filter(Boolean);
+    const parts = [ayah.text, idText, enText].filter(Boolean);
     try {
       await navigator.clipboard.writeText(parts.join("\n\n"));
       setCopied(true);
@@ -63,11 +76,11 @@ export function AyahCard({ surah, ayah, audioState, onPlayAudio }: AyahCardProps
       </p>
 
       <div className="mt-5 border-t-[3px] border-double border-border pt-4">
-        {showId ? (
-          <div className={showEn ? "mb-4" : undefined}>
-            <p className="label-caps mb-1.5">Terjemahan Kemenag RI</p>
-            <p className="text-base leading-7 text-text">{ayah.translationId}</p>
-            {ayah.translationFootnotes ? (
+        {idText ? (
+          <div className={enText ? "mb-4" : undefined}>
+            <p className="label-caps mb-1.5">{translationLabel(idTranslation!)}</p>
+            <p className="text-base leading-7 text-text">{idText}</p>
+            {idTranslation === "id.indonesian" && ayah.translationFootnotes ? (
               <p className="mt-2 border-l-2 border-gold/50 pl-3 text-xs leading-5 text-muted">
                 {ayah.translationFootnotes}
               </p>
@@ -75,10 +88,10 @@ export function AyahCard({ surah, ayah, audioState, onPlayAudio }: AyahCardProps
           </div>
         ) : null}
 
-        {showEn ? (
+        {enText ? (
           <div>
-            <p className="label-caps mb-1.5">Saheeh International</p>
-            <p className="text-base leading-7 text-text italic">{ayah.translationEn}</p>
+            <p className="label-caps mb-1.5">{translationLabel(enTranslation!)}</p>
+            <p className="text-base leading-7 text-text italic">{enText}</p>
           </div>
         ) : null}
       </div>

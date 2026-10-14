@@ -10,6 +10,8 @@ export interface Ayah {
   translationFootnotes?: string;
   /** Saheeh International English translation. */
   translationEn: string;
+  /** Additional translations keyed by edition identifier (e.g. "id.muntakhab"). */
+  translations?: Partial<Record<string, string>>;
   juz: number;
   page: number;
   hizbQuarter: number;
