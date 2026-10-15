@@ -58,6 +58,9 @@ Cloudflare Pages (static export via `wrangler.toml` /
   - Build output directory: `out`
   - Deploy command (if custom): `pnpm run deploy:pages`
   - Framework preset: None / static (not Next.js Workers)
+- `public/_headers` sets Pages cache/security headers (immutable
+  `/_next/static/*`, no-cache `sw.js`). `SITE_URL` in `src/lib/site.ts` is
+  the canonical origin for `metadataBase`, `robots.txt`, and `sitemap.xml`.
 
 ## Editor extensions
 

@@ -49,3 +49,6 @@ test-results/
 
 # pnpm local store
 .pnpm-store/
+
+# Cloudflare wrangler local state
+.wrangler/

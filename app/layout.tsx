@@ -5,16 +5,25 @@ import { SearchOverlay } from "../src/components/SearchOverlay";
 import { ServiceWorkerRegistrar } from "../src/components/ServiceWorkerRegistrar";
 import { SiteHeader } from "../src/components/SiteHeader";
 import { StoreHydrator } from "../src/components/StoreHydrator";
+import { SITE_URL } from "../src/lib/site";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Al-Quran",
     template: "%s — Al-Quran",
   },
   description:
     "Baca Al-Quran dengan terjemahan Kemenag RI dan English, audio per ayat, bookmark, dan jadwal sholat.",
+  openGraph: {
+    type: "website",
+    siteName: "Al-Quran — Efektif",
+    locale: "id_ID",
+    url: "/",
+    images: [{ url: "/icons/icon-1024.png", width: 1024, height: 1024 }],
+  },
   icons: {
     icon: "/icons/favicon-64.png",
     apple: "/icons/icon-1024.png",
