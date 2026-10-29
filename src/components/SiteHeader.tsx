@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { ABOUT_URL } from "../lib/constants";
-import { useHasHydrated, useQuranStore, type TranslationMode } from "../lib/store";
+import { useHasHydrated, useQuranStore } from "../lib/store";
+import { ID_TRANSLATIONS, EN_TRANSLATIONS } from "../data/translation-sources";
 import { openSearchOverlay } from "./SearchOverlay";
 
 const NAV_ITEMS = [
@@ -15,11 +16,6 @@ const NAV_ITEMS = [
   { href: "/changelog/", label: "Changelog" },
 ] as const;
 
-const TRANSLATION_OPTIONS: { value: TranslationMode; label: string }[] = [
-  { value: "id", label: "Indonesia (Kemenag)" },
-  { value: "en", label: "English (Saheeh)" },
-  { value: "both", label: "ID + EN" },
-];
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -94,8 +90,10 @@ function SettingsMenu() {
   const [open, setOpen] = useState(false);
   const [downloadState, setDownloadState] = useState<"idle" | "working" | "done" | "error">("idle");
   const menuRef = useRef<HTMLDivElement>(null);
-  const translationMode = useQuranStore((state) => state.translationMode);
-  const setTranslationMode = useQuranStore((state) => state.setTranslationMode);
+  const idTranslation = useQuranStore((state) => state.idTranslation);
+  const setIdTranslation = useQuranStore((state) => state.setIdTranslation);
+  const enTranslation = useQuranStore((state) => state.enTranslation);
+  const setEnTranslation = useQuranStore((state) => state.setEnTranslation);
 
   useEffect(() => {
     if (!open) return;
@@ -151,23 +149,31 @@ function SettingsMenu() {
 
       {open ? (
         <div className="absolute right-0 z-50 mt-2 w-64 rounded-sm border-2 border-border bg-base p-3">
-          <p className="label-caps mb-2">Terjemahan</p>
-          <div className="mb-3 flex flex-col gap-1" role="radiogroup" aria-label="Mode terjemahan">
-            {TRANSLATION_OPTIONS.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                role="radio"
-                aria-checked={translationMode === option.value}
-                onClick={() => setTranslationMode(option.value)}
-                className={`motion-fade rounded-sm px-3 py-2 text-left text-sm font-medium ${
-                  translationMode === option.value
-                    ? "bg-primary-soft text-primary"
-                    : "text-text hover:bg-surface"
-                }`}
-              >
-                {option.label}
-              </button>
+          <p className="label-caps mb-2">Terjemahan Indonesia</p>
+          <div className="mb-3 flex flex-col gap-1" role="radiogroup" aria-label="Terjemahan Indonesia">
+            <TranslationOption value={null} active={idTranslation === null} onSelect={setIdTranslation} label="Sembunyikan" />
+            {ID_TRANSLATIONS.map((source) => (
+              <TranslationOption
+                key={source.identifier}
+                value={source.identifier}
+                active={idTranslation === source.identifier}
+                onSelect={setIdTranslation}
+                label={source.label}
+              />
+            ))}
+          </div>
+
+          <p className="label-caps mb-2">Terjemahan Inggris</p>
+          <div className="mb-3 flex flex-col gap-1" role="radiogroup" aria-label="Terjemahan Inggris">
+            <TranslationOption value={null} active={enTranslation === null} onSelect={setEnTranslation} label="Sembunyikan" />
+            {EN_TRANSLATIONS.map((source) => (
+              <TranslationOption
+                key={source.identifier}
+                value={source.identifier}
+                active={enTranslation === source.identifier}
+                onSelect={setEnTranslation}
+                label={source.label}
+              />
             ))}
           </div>
 
@@ -198,6 +204,32 @@ function SettingsMenu() {
         </div>
       ) : null}
     </div>
+  );
+}
+
+function TranslationOption({
+  value,
+  active,
+  onSelect,
+  label,
+}: {
+  value: string | null;
+  active: boolean;
+  onSelect: (v: string | null) => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={active}
+      onClick={() => onSelect(value)}
+      className={`motion-fade rounded-sm px-3 py-2 text-left text-sm font-medium ${
+        active ? "bg-primary-soft text-primary" : "text-text hover:bg-surface"
+      }`}
+    >
+      {label}
+    </button>
   );
 }
 
